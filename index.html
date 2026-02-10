@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>:: Glits Security Zine ::</title>
+
+  <meta name="description" content="Glits Security Zine — write-ups e notas sobre segurança da informação.">
+  <meta name="keywords" content="security, hacking, ctf, writeups, networks">
+  <meta name="author" content="José Eduardo Bezerra de Medeiros">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      background-color: #000;
+      color: #d0d0d0;
+      font-family: "Courier New", Courier, monospace;
+      margin: 0;
+    }
+
+    a {
+      color: #7fffd4;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    .nav {
+      text-align: center;
+      padding: 15px;
+      border-bottom: 1px solid #444;
+      font-weight: bold;
+    }
+
+    /* ASCII à esquerda */
+    .ascii-left {
+      position: fixed;
+      top: 15px;
+      left: 20px;
+      opacity: 0.85;
+      white-space: pre;
+      pointer-events: none;
+    }
+    .ascii-left pre {
+      margin-bottom: 20px;   /* ajuste fino */
+      line-height: 1;
+    }
+
+
+    .container {
+      max-width: 900px;
+      margin: auto;
+      padding: 30px 15px;
+      font-size: 1rem;
+    }
+
+    h1, h2 {
+      color: #fff;
+      font-weight: normal;
+    }
+
+    .title {
+      text-align: center;
+    }
+
+    pre {
+      background: none;
+      border: none;
+      padding: 0;
+      margin-bottom: 20px;
+      color: #cfcfcf;
+      white-space: pre-wrap;
+    }
+
+    hr {
+      border: 0;
+      border-top: 1px solid #333;
+      margin: 30px 0;
+    }
+
+    footer {
+      text-align: center;
+      padding: 20px;
+      border-top: 1px solid #333;
+      font-size: 0.85em;
+      color: #888;
+    }
+
+    .to-the-right {
+      text-align: right;
+      white-space: pre;
+    }
+    .ascii-wrapper {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .ascii-wrapper pre {
+      white-space: pre;
+      text-align: left;   /* CRÍTICO */
+      line-height: 1;
+      margin: 0;
+    }
+    
+
+    @media (max-width: 1100px) {
+      .ascii-left {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ASCII FIXO À ESQUERDA -->
+  <div class="ascii-left">
+<pre>
+   ,   ,
+  /////|
+ ///// |
+|~~~|  |
+|===|  |
+|G  |  |
+| G |  |
+|  G| /
+|===|/
+'---'
+</pre>
+<pre>
+          .---------.
+          |.-------.|
+          ||>run#  ||
+          ||       ||
+          |"-------'|
+        .-^---------^-.
+        | ---~   G1its|
+        "-------------'
+</pre>
+<pre>
+⡎⠑ ⡀⢀ ⣇⡀ ⢀⡀ ⡀⣀
+⠣⠔ ⣑⡺ ⠧⠜ ⠣⠭ ⠏     
+</pre>
+<pre>
+            .---.
+           /     \
+           \.@-@./
+           /`\_/`\
+          //  _  \\
+         | \     )|_
+        /`\_`>  <_/ \
+        \__/'---'\__/
+</pre>
+
+  </div>
+
+  <div class="nav">
+    [ <a href="index.html">Home</a> ]
+    [ <a href="fundamentos.html">Fundamentos</a> ]
+    [ <a href="writeups.html">Write-ups</a> ]
+    [ <a href="about.html">About</a> ]
+    [ <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a> ]
+  </div>
+
+  <div class="container">
+
+    <h1 class="title">
+╔═════════════════════════════════════════════╗
+ :: G1its — Cybersecurity Zine & Write-ups ::
+╚═════════════════════════════════════════════╝
+    </h1>
+
+    <p class="title">
+      José Eduardo Bezerra de Medeiros<br>
+      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    </p>
+    <hr>
+    <hr>
+    <h2>[ Introdução ]</h2>
+
+<pre>
+Esse site é minha zine pessoal sobre hacking. Aqui eu documento write-ups de CTFs, organizados por plataforma e área de estudo.
+
+A ideia é explicar detalhadamente por que cada solução funciona, construindo conhecimento sólido e entendimento técnico real.
+
+Os tópicos abordados incluem redes de computadores, segurança web, análise de malware, engenharia reversa, exploits binários, criptografia, forense digital e fundamentos de segurança ofensiva e defensiva.
+</pre>
+
+    <hr>
+
+    <h2>[ <a href="fundamentos.html">Fundamentos</a> ] (em construção)</h2>
+
+<pre>
+Glossário técnico e manual prático de comandos para consulta durante estudos e laboratórios, com explicações conceituais e aplicações reais.
+</pre>
+
+    <hr>
+
+    <h2>[ <a href="writeups.html">Write-ups</a> ] (em construção)</h2>
+
+<pre>
+Documentação detalhada de write-ups organizados por plataforma e área técnica, registrando análise, exploração e aprendizado.
+</pre>
+    <hr>
+    <hr>
+    <pre class="to-the-right">
+Knowledge grows when shared.
+Silence benefits only ignorance.
+    </pre>
+
+    <!-- ASCII FINAL — NÃO MEXIDO -->
+    <pre class="ascii-wrapper">
+             ▄▄▄        ██
+            █▀██        ▀▀       ██
+  ▄███▄██     ██      ████     ███████   ▄▄█████▄
+ ██▀  ▀██     ██        ██       ██      ██▄▄▄▄ ▀
+ ██    ██     ██        ██       ██       ▀▀▀▀██▄
+ ▀██▄▄███  ▄▄▄██▄▄▄  ▄▄▄██▄▄▄    ██▄▄▄   █▄▄▄▄▄██
+  ▄▀▀▀ ██  ▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀     ▀▀▀▀    ▀▀▀▀▀▀
+  ▀████▀▀
+
+   knowledge • curiosity • persistence
+    </pre>
+
+  </div>
+
+  <footer>
+    Copyleft © 2026 — G1its<br>
+  </footer>
+
+</body>
+</html>
