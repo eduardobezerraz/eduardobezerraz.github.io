@@ -10,6 +10,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
+    /* =========================
+       BASE
+    ========================== */
     body {
       background-color: #000;
       color: #d0d0d0;
@@ -26,6 +29,9 @@
       text-decoration: underline;
     }
 
+    /* =========================
+       NAV
+    ========================== */
     .nav {
       text-align: center;
       padding: 15px;
@@ -33,7 +39,9 @@
       font-weight: bold;
     }
 
-    /* ASCII à esquerda */
+    /* =========================
+       ASCII FIXO À ESQUERDA
+    ========================== */
     .ascii-left {
       position: fixed;
       top: 15px;
@@ -42,28 +50,39 @@
       white-space: pre;
       pointer-events: none;
     }
+
     .ascii-left pre {
-      margin-bottom: 20px;   /* ajuste fino */
+      margin-bottom: 20px;
       line-height: 1;
     }
 
-
+    /* =========================
+       CONTEÚDO
+    ========================== */
     .container {
       max-width: 900px;
       margin: auto;
       padding: 30px 15px;
-      font-size: 1rem;
+      font-size: clamp(14px, 2.4vw, 16px);
+      line-height: 1.6;
     }
 
-    h1, h2 {
-      color: #fff;
-      font-weight: normal;
+    h1 {
+      font-size: clamp(18px, 4vw, 22px);
+    }
+
+    h2 {
+      font-size: clamp(15px, 3vw, 18px);
     }
 
     .title {
       text-align: center;
+      font-size: clamp(13px, 2.2vw, 15px);
     }
 
+    /* =========================
+       PRE / ASCII
+    ========================== */
     pre {
       background: none;
       border: none;
@@ -71,14 +90,23 @@
       margin-bottom: 20px;
       color: #cfcfcf;
       white-space: pre-wrap;
+      overflow: hidden;
+      font-size: clamp(13px, 2.3vw, 15px);
+      line-height: 1.6;
     }
 
+    /* =========================
+       SEPARADORES
+    ========================== */
     hr {
       border: 0;
       border-top: 1px solid #333;
       margin: 30px 0;
     }
 
+    /* =========================
+       FOOTER
+    ========================== */
     footer {
       text-align: center;
       padding: 20px;
@@ -87,36 +115,135 @@
       color: #888;
     }
 
+    /* =========================
+       TEXTO À DIREITA
+    ========================== */
     .to-the-right {
       text-align: right;
       white-space: pre;
     }
+
+    /* =========================
+       ASCII FINAL
+    ========================== */
     .ascii-wrapper {
       display: flex;
       justify-content: flex-end;
+      max-width: 100%;
+      margin-top: 30px;
     }
 
     .ascii-wrapper pre {
       white-space: pre;
-      text-align: left;   /* CRÍTICO */
+      text-align: left;
       line-height: 1;
       margin: 0;
+      font-size: clamp(12px, 2.2vw, 14px);
     }
-    
 
+    /* =========================
+       ASCII TÍTULO
+    ========================== */
+    .ascii-title {
+      display: flex;
+      justify-content: center;
+    }
+
+    .ascii-title pre {
+      white-space: pre;
+      text-align: center;
+      line-height: 1.25;
+      margin: 0;
+      max-width: 100%;
+      overflow: hidden;
+      font-size: clamp(15px, 2.8vw, 18px);
+      font-family: inherit;
+    }
+
+    /* =========================
+       RESPONSIVO
+    ========================== */
     @media (max-width: 1100px) {
       .ascii-left {
         display: none;
       }
     }
+
+    @media (max-width: 600px) {
+      .nav {
+        font-size: 0.9em;
+        line-height: 1.8;
+      }
+
+      h1 {
+        font-size: 1.1em;
+      }
+
+      h2 {
+        font-size: 1em;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .ascii-wrapper {
+        display: none;
+      }
+    }
   </style>
+
+  <script>
+    function buildTitleBox() {
+      const text = " :: G1its — Cybersecurity Write-ups :: ";
+      const container = document.querySelector(".container");
+      const pre = document.getElementById("title-box");
+
+      if (!container || !pre) return;
+
+      const probe = document.createElement("span");
+      probe.style.position = "absolute";
+      probe.style.visibility = "hidden";
+      probe.style.whiteSpace = "pre";
+      probe.style.font = getComputedStyle(pre).font;
+      document.body.appendChild(probe);
+
+      probe.textContent = text;
+      const textWidth = probe.offsetWidth;
+
+      probe.textContent = "═";
+      const charWidth = probe.offsetWidth;
+
+      document.body.removeChild(probe);
+
+      const maxWidth = container.clientWidth * 0.95;
+      const maxChars = Math.floor(maxWidth / charWidth);
+
+      if (maxChars < text.length + 6) {
+        pre.textContent = text.trim();
+        return;
+      }
+
+      const innerChars = maxChars - 2;
+      const sideChars = Math.floor((innerChars - text.length) / 2);
+
+      const topBottom = "═".repeat(innerChars);
+      const side = "═".repeat(sideChars);
+
+      pre.textContent =
+        "╔" + topBottom + "╗\n" +
+        side + text + side + "\n" +
+        "╚" + topBottom + "╝";
+    }
+
+    window.addEventListener("load", buildTitleBox);
+    window.addEventListener("resize", buildTitleBox);
+  </script>
 </head>
 
 <body>
 
   <!-- ASCII FIXO À ESQUERDA -->
   <div class="ascii-left">
-<pre>
+    <pre>
    ,   ,
   /////|
  ///// |
@@ -127,8 +254,9 @@
 |  G| /
 |===|/
 '---'
-</pre>
-<pre>
+    </pre>
+
+    <pre>
           .---------.
           |.-------.|
           ||>run#  ||
@@ -137,24 +265,17 @@
         .-^---------^-.
         | ---~   G1its|
         "-------------'
-</pre>
-<pre>
+    </pre>
+
+    <pre>
 ⡎⠑ ⡀⢀ ⣇⡀ ⢀⡀ ⡀⣀
-⠣⠔ ⣑⡺ ⠧⠜ ⠣⠭ ⠏     
-</pre>
-<pre>
-            .---.
-           /     \
-           \.@-@./
-           /`\_/`\
-          //  _  \\
-         | \     )|_
-        /`\_`>  <_/ \
-        \__/'---'\__/
-</pre>
+⠣⠔ ⣑⡺ ⠧⠜ ⠣⠭ ⠏
+    </pre>
+
 
   </div>
 
+  <!-- NAV -->
   <div class="nav">
     [ <a href="index.html">Home</a> ]
     [ <a href="fundamentos.html">Fundamentos</a> ]
@@ -163,53 +284,55 @@
     [ <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a> ]
   </div>
 
+  <!-- CONTEÚDO -->
   <div class="container">
 
-    <h1 class="title">
-╔═════════════════════════════════════════════╗
- :: G1its — Cybersecurity Zine & Write-ups ::
-╚═════════════════════════════════════════════╝
+    <h1 class="title ascii-title">
+      <pre id="title-box"></pre>
     </h1>
 
     <p class="title">
       José Eduardo Bezerra de Medeiros<br>
       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     </p>
+
     <hr>
     <hr>
+
     <h2>[ Introdução ]</h2>
 
-<pre>
+    <pre>
 Esse site é minha zine pessoal sobre hacking. Aqui eu documento write-ups de CTFs, organizados por plataforma e área de estudo.
 
 A ideia é explicar detalhadamente por que cada solução funciona, construindo conhecimento sólido e entendimento técnico real.
 
 Os tópicos abordados incluem redes de computadores, segurança web, análise de malware, engenharia reversa, exploits binários, criptografia, forense digital e fundamentos de segurança ofensiva e defensiva.
-</pre>
+    </pre>
 
     <hr>
 
     <h2>[ <a href="fundamentos.html">Fundamentos</a> ] (em construção)</h2>
 
-<pre>
+    <pre>
 Glossário técnico e manual prático de comandos para consulta durante estudos e laboratórios, com explicações conceituais e aplicações reais.
-</pre>
+    </pre>
 
     <hr>
 
     <h2>[ <a href="writeups.html">Write-ups</a> ] (em construção)</h2>
 
-<pre>
+    <pre>
 Documentação detalhada de write-ups organizados por plataforma e área técnica, registrando análise, exploração e aprendizado.
-</pre>
+    </pre>
+
     <hr>
     <hr>
+
     <pre class="to-the-right">
 Knowledge grows when shared.
 Silence benefits only ignorance.
     </pre>
 
-    <!-- ASCII FINAL — NÃO MEXIDO -->
     <pre class="ascii-wrapper">
              ▄▄▄        ██
             █▀██        ▀▀       ██
@@ -226,7 +349,7 @@ Silence benefits only ignorance.
   </div>
 
   <footer>
-    Copyleft © 2026 — G1its<br>
+    Copyleft © 2026 — G1its
   </footer>
 
 </body>
