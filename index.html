@@ -2,338 +2,437 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-  <title>:: Glits Security Zine ::</title>
 
-  <meta name="description" content="Glits Security Zine — write-ups e notas sobre segurança da informação.">
-  <meta name="keywords" content="security, hacking, ctf, writeups, networks">
+  <title>G1its Tech Blog</title>
+
+  <meta name="description" content="Write-ups, research notes e estudos sobre segurança ofensiva.">
+  <meta name="keywords" content="security, hacking, ctf, web security, reverse engineering">
   <meta name="author" content="José Eduardo Bezerra de Medeiros">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+  <!-- FONT -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet"
+  >
+
   <style>
-    /* =========================
-       BASE
-    ========================== */
-    body {
-      background-color: #000;
-      color: #d0d0d0;
-      font-family: "Courier New", Courier, monospace;
+
+    /* =========================================
+       RESET
+    ========================================= */
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
     }
+
+    /* =========================================
+       BODY
+    ========================================= */
+
+    body {
+      background: #0d1117;
+      color: #c9d1d9;
+      font-family: "JetBrains Mono", monospace;
+      line-height: 1.8;
+    }
+
+    /* =========================================
+       LINKS
+    ========================================= */
 
     a {
       color: #7fffd4;
       text-decoration: none;
+      transition: 0.2s ease;
     }
 
     a:hover {
-      text-decoration: underline;
+      color: #00ffaa;
+      text-shadow: 0 0 10px rgba(0,255,170,0.35);
     }
 
-    /* =========================
-       NAV
-    ========================== */
+    /* =========================================
+       NAVBAR
+    ========================================= */
+
     .nav {
-      text-align: center;
-      padding: 15px;
-      border-bottom: 1px solid #444;
-      font-weight: bold;
-    }
+      position: sticky;
+      top: 0;
 
-    /* =========================
-       ASCII FIXO À ESQUERDA
-    ========================== */
-    .ascii-left {
-      position: fixed;
-      top: 15px;
-      left: 20px;
-      opacity: 0.85;
-      white-space: pre;
-      pointer-events: none;
-    }
-
-    .ascii-left pre {
-      margin-bottom: 20px;
-      line-height: 1;
-    }
-
-    /* =========================
-       CONTEÚDO
-    ========================== */
-    .container {
-      max-width: 900px;
-      margin: auto;
-      padding: 30px 15px;
-      font-size: clamp(14px, 2.4vw, 16px);
-      line-height: 1.6;
-    }
-
-    h1 {
-      font-size: clamp(18px, 4vw, 22px);
-    }
-
-    h2 {
-      font-size: clamp(15px, 3vw, 18px);
-    }
-
-    .title {
-      text-align: center;
-      font-size: clamp(13px, 2.2vw, 15px);
-    }
-
-    /* =========================
-       PRE / ASCII
-    ========================== */
-    pre {
-      background: none;
-      border: none;
-      padding: 0;
-      margin-bottom: 20px;
-      color: #cfcfcf;
-      white-space: pre-wrap;
-      overflow: hidden;
-      font-size: clamp(13px, 2.3vw, 15px);
-      line-height: 1.6;
-    }
-
-    /* =========================
-       SEPARADORES
-    ========================== */
-    hr {
-      border: 0;
-      border-top: 1px solid #333;
-      margin: 30px 0;
-    }
-
-    /* =========================
-       FOOTER
-    ========================== */
-    footer {
-      text-align: center;
-      padding: 20px;
-      border-top: 1px solid #333;
-      font-size: 0.85em;
-      color: #888;
-    }
-
-    /* =========================
-       TEXTO À DIREITA
-    ========================== */
-    .to-the-right {
-      text-align: right;
-      white-space: pre;
-    }
-
-    /* =========================
-       ASCII FINAL
-    ========================== */
-    .ascii-wrapper {
-      display: flex;
-      justify-content: flex-end;
-      max-width: 100%;
-      margin-top: 30px;
-    }
-
-    .ascii-wrapper pre {
-      white-space: pre;
-      text-align: left;
-      line-height: 1;
-      margin: 0;
-      font-size: clamp(12px, 2.2vw, 14px);
-    }
-
-    /* =========================
-       ASCII TÍTULO
-    ========================== */
-    .ascii-title {
       display: flex;
       justify-content: center;
+      align-items: center;
+      gap: 22px;
+
+      padding: 18px 20px;
+
+      background: rgba(13,17,23,0.88);
+      backdrop-filter: blur(10px);
+
+      border-bottom: 1px solid #1f2937;
+
+      z-index: 999;
     }
 
-    .ascii-title pre {
-      white-space: pre;
+    .nav a {
+      font-size: 0.95rem;
+      color: #9ae6b4;
+    }
+
+    /* =========================================
+       CONTAINER
+    ========================================= */
+
+    .container {
+      width: 100%;
+      max-width: 1000px;
+
+      margin: auto;
+      padding: 60px 20px;
+    }
+
+    /* =========================================
+       HERO
+    ========================================= */
+
+    .hero {
       text-align: center;
-      line-height: 1.25;
-      margin: 0;
-      max-width: 100%;
-      overflow: hidden;
-      font-size: clamp(15px, 2.8vw, 18px);
+      margin-bottom: 60px;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 6vw, 4rem);
+      color: #7fffd4;
+
+      margin-bottom: 20px;
+
+      letter-spacing: 1px;
+    }
+
+    .hero .subtitle {
+      color: #8b949e;
+      font-size: 1rem;
+
+      max-width: 700px;
+      margin: auto;
+    }
+
+    .hero .author {
+      margin-top: 25px;
+      color: #6e7681;
+      font-size: 0.9rem;
+    }
+
+    /* =========================================
+       PANELS
+    ========================================= */
+
+    .panel {
+      background: #11161d;
+
+      border: 1px solid #1f2937;
+      border-radius: 14px;
+
+      padding: 30px;
+      margin-bottom: 28px;
+
+      box-shadow:
+        0 0 30px rgba(0,255,170,0.03),
+        inset 0 0 1px rgba(255,255,255,0.03);
+
+      transition: 0.25s ease;
+    }
+
+    .panel:hover {
+      border-color: #2c3b4f;
+      transform: translateY(-2px);
+    }
+
+    /* =========================================
+       TITLES
+    ========================================= */
+
+    h2 {
+      color: #7fffd4;
+      font-size: 1.1rem;
+
+      margin-bottom: 18px;
+    }
+
+    /* =========================================
+       TEXT
+    ========================================= */
+
+    p {
+      color: #c9d1d9;
+      font-size: 0.96rem;
+    }
+
+    /* =========================================
+       CODE / PRE
+    ========================================= */
+
+    pre {
+      overflow-x: auto;
+
+      padding: 20px;
+      margin-top: 18px;
+
+      border-radius: 10px;
+
+      background: #0b0f14;
+      border: 1px solid #1c2633;
+
+      color: #d1d5db;
+
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    code {
       font-family: inherit;
     }
 
-    /* =========================
-       RESPONSIVO
-    ========================== */
-    @media (max-width: 1100px) {
-      .ascii-left {
-        display: none;
-      }
+    /* =========================================
+       QUOTE
+    ========================================= */
+
+    .quote {
+      text-align: right;
+
+      color: #7d8590;
+
+      margin-top: 60px;
+      margin-bottom: 40px;
+
+      font-size: 0.95rem;
     }
 
-    @media (max-width: 600px) {
+    /* =========================================
+       ASCII
+    ========================================= */
+
+.ascii {
+  display: flex;
+  justify-content: right;
+  overflow: hidden;
+}
+
+.ascii pre {
+  white-space: pre;
+  overflow: hidden;
+  display: inline-block;
+}
+
+    /* =========================================
+       FOOTER
+    ========================================= */
+
+    footer {
+      border-top: 1px solid #1f2937;
+
+      text-align: center;
+
+      padding: 25px;
+
+      color: #6e7681;
+      font-size: 0.85rem;
+    }
+
+    /* =========================================
+       RESPONSIVE
+    ========================================= */
+
+    @media (max-width: 768px) {
+
       .nav {
-        font-size: 0.9em;
-        line-height: 1.8;
+        flex-wrap: wrap;
+        gap: 14px;
       }
 
-      h1 {
-        font-size: 1.1em;
+      .panel {
+        padding: 24px;
       }
 
-      h2 {
-        font-size: 1em;
+      .hero {
+        margin-bottom: 40px;
       }
+
+      .hero h1 {
+        font-size: 2.4rem;
+      }
+
     }
 
-    @media (max-width: 480px) {
-      .ascii-wrapper {
-        display: none;
-      }
-    }
   </style>
-
-  <script>
-    function buildTitleBox() {
-      const text = " :: G1its — Cybersecurity Write-ups :: ";
-      const container = document.querySelector(".container");
-      const pre = document.getElementById("title-box");
-
-      if (!container || !pre) return;
-
-      const probe = document.createElement("span");
-      probe.style.position = "absolute";
-      probe.style.visibility = "hidden";
-      probe.style.whiteSpace = "pre";
-      probe.style.font = getComputedStyle(pre).font;
-      document.body.appendChild(probe);
-
-      probe.textContent = text;
-      const textWidth = probe.offsetWidth;
-
-      probe.textContent = "═";
-      const charWidth = probe.offsetWidth;
-
-      document.body.removeChild(probe);
-
-      const maxWidth = container.clientWidth * 0.95;
-      const maxChars = Math.floor(maxWidth / charWidth);
-
-      if (maxChars < text.length + 6) {
-        pre.textContent = text.trim();
-        return;
-      }
-
-      const innerChars = maxChars - 2;
-      const sideChars = Math.floor((innerChars - text.length) / 2);
-
-      const topBottom = "═".repeat(innerChars);
-      const side = "═".repeat(sideChars);
-
-      pre.textContent =
-        "╔" + topBottom + "╗\n" +
-        side + text + side + "\n" +
-        "╚" + topBottom + "╝";
-    }
-
-    window.addEventListener("load", buildTitleBox);
-    window.addEventListener("resize", buildTitleBox);
-  </script>
 </head>
 
 <body>
 
-  <!-- ASCII FIXO À ESQUERDA -->
-  <div class="ascii-left">
-    <pre>
-   ,   ,
-  /////|
- ///// |
-|~~~|  |
-|===|  |
-|G  |  |
-| G |  |
-|  G| /
-|===|/
-'---'
-    </pre>
+  <!-- =====================================
+       NAVBAR
+  ====================================== -->
+
+  <nav class="nav">
+
+    <a href="index.html">Home</a>
+
+    <a href="fundamentos.html">
+      Fundamentos
+    </a>
+
+    <a href="writeups.html">
+      Write-ups
+    </a>
+    
+    <a href="critica.html">
+      Crítica
+    </a>
+
+    <a href="Whoami.html">
+      whoami
+    </a>
+
+    <a
+      href="https://github.com/eduardobezerraz"
+      target="_blank"
+    >
+      GitHub
+    </a>
+
+  </nav>
+
+  <!-- =====================================
+       MAIN
+  ====================================== -->
+
+  <main class="container">
+
+    <!-- HERO -->
+
+    <section class="hero">
+
+      <h1>
+        G1its Tech blog
+      </h1>
+
+      <p class="subtitle">
+        Reflexões filosóficas sobre tecnologia e sociedade,
+        glossários de fundamentos técnicos voltados segurança da informação,
+        passo-a-passo e explicações de como quebrar coisas.
+      </p>
+
+    </section>
+
+    <!-- INTRO -->
+
+    <section class="panel">
+
+      <h2>
+        [ Introdução ]
+      </h2>
+
+      <p>
+      Esse site é meu blog pessoal, onde eu documentos meus estudos e reflexões sobre hacking, 
+      cibersegurança e tecnologia em geral :)
+      </p>
+
+      <br>
+
+    </section>
+
+    <!-- FUNDAMENTOS -->
+
+    <section class="panel">
+
+      <h2>
+        [
+        <a href="fundamentos.html">
+          Fundamentos
+        </a>
+        ]
+      </h2>
+
+      <p>
+        Glossário técnico e fundamentos essenciais para segurança da informação.
+      </p>
+
+    </section>
+
+    <!-- WRITEUPS -->
+
+    <section class="panel">
+
+      <h2>
+        [
+        <a href="writeups.html">
+          Write-ups
+        </a>
+        ]
+      </h2>
+
+      <p>
+        Documentação detalhada de desafios
+        de CTF, laboratórios, exploração
+        de vulnerabilidades e estudos
+        práticos organizados por área técnica.
+      </p>
+
+    </section>
+
+    <!-- CRÍTICA -->
+
+    <section class="panel">
+
+      <h2>
+        [
+        <a href="critica.html">
+          Crítica
+        </a>
+        ]
+      </h2>
+
+      <p>
+        Textos com reflexões críticas sobre o uso da tecnologia na sociedade.
+      </p>
+
+    </section>    
+
+    <!-- TERMINAL STYLE PANEL -->
+
+    <section class="panel">
+
+
+
+<pre><code>
+> whoami
+Computer Networks Student
+
+> current_focus
+Segurança web
+Segurança de redes
+Segurança de aplicações
+Sistemas Complexos
+Impacto social do uso de tecnologias na sociedade 
+
+
+</code></pre>
+
+    </section>
+
+
+
+    <!-- ASCII -->
+
+    <div class="ascii">
 
     <pre>
-          .---------.
-          |.-------.|
-          ||>run#  ||
-          ||       ||
-          |"-------'|
-        .-^---------^-.
-        | ---~   G1its|
-        "-------------'
-    </pre>
-
-    <pre>
-⡎⠑ ⡀⢀ ⣇⡀ ⢀⡀ ⡀⣀
-⠣⠔ ⣑⡺ ⠧⠜ ⠣⠭ ⠏
-    </pre>
-
-
-  </div>
-
-  <!-- NAV -->
-  <div class="nav">
-    [ <a href="index.html">Home</a> ]
-    [ <a href="fundamentos.html">Fundamentos</a> ]
-    [ <a href="writeups.html">Write-ups</a> ]
-    [ <a href="about.html">About</a> ]
-    [ <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a> ]
-  </div>
-
-  <!-- CONTEÚDO -->
-  <div class="container">
-
-    <h1 class="title ascii-title">
-      <pre id="title-box"></pre>
-    </h1>
-
-    <p class="title">
-      José Eduardo Bezerra de Medeiros<br>
-      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    </p>
-
-    <hr>
-    <hr>
-
-    <h2>[ Introdução ]</h2>
-
-    <pre>
-Esse site é minha zine pessoal sobre hacking. Aqui eu documento write-ups de CTFs, organizados por plataforma e área de estudo.
-
-A ideia é explicar detalhadamente por que cada solução funciona, construindo conhecimento sólido e entendimento técnico real.
-
-Os tópicos abordados incluem redes de computadores, segurança web, análise de malware, engenharia reversa, exploits binários, criptografia, forense digital e fundamentos de segurança ofensiva e defensiva.
-    </pre>
-
-    <hr>
-
-    <h2>[ <a href="fundamentos.html">Fundamentos</a> ] (em construção)</h2>
-
-    <pre>
-Glossário técnico e manual prático de comandos para consulta durante estudos e laboratórios, com explicações conceituais e aplicações reais.
-    </pre>
-
-    <hr>
-
-    <h2>[ <a href="writeups.html">Write-ups</a> ] (em construção)</h2>
-
-    <pre>
-Documentação detalhada de write-ups organizados por plataforma e área técnica, registrando análise, exploração e aprendizado.
-    </pre>
-
-    <hr>
-    <hr>
-
-    <pre class="to-the-right">
-Knowledge grows when shared.
-Silence benefits only ignorance.
-    </pre>
-
-    <pre class="ascii-wrapper">
              ▄▄▄        ██
             █▀██        ▀▀       ██
   ▄███▄██     ██      ████     ███████   ▄▄█████▄
@@ -343,14 +442,28 @@ Silence benefits only ignorance.
   ▄▀▀▀ ██  ▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀     ▀▀▀▀    ▀▀▀▀▀▀
   ▀████▀▀
 
-   knowledge • curiosity • persistence
+   knowledge • curiosity • persistence :)
     </pre>
 
-  </div>
+    </div>
+    
+    <!-- QUOTE -->
+
+    <div class="quote">
+      Knowledge grows when shared.<br>
+      Silence benefits only ignorance.
+    </div>
+
+  </main>
+
+  <!-- =====================================
+       FOOTER
+  ====================================== -->
 
   <footer>
-    Copyleft © 2026 — G1its
+    Copyleft © 2026 — G1its Tech Blog
   </footer>
 
 </body>
 </html>
+
