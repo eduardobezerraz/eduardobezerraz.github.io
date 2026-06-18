@@ -2,90 +2,155 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-
-  <title>G1its Tech Blog</title>
-
-  <meta name="description" content="G1its Tech Blog - estudos e reflexões sobre segurança e tecnologia.">
+  <title>Fundamentos — G1its</title>
+  <meta name="description" content="Glossário técnico e conceitos essenciais de segurança da informação.">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-
-  <!-- CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../css/style.css">
 </head>
-
 <body>
 
-  <!-- NAV -->
-  <nav class="nav">
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../index.html" class="nav-brand">g1its<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="../fundamentos/index.html" class="active">Fundamentos</a></li>
+      <li><a href="../writeups/index.html">Write-ups</a></li>
+      <li><a href="../critica/index.html">Crítica</a></li>
+      <li><a href="../whoami/whoami.html">whoami</a></li>
+    </ul>
+    <a href="https://github.com/eduardobezerraz" target="_blank" class="nav-cta">GitHub ↗</a>
+  </div>
+</nav>
 
-    <a href="../index.html">Home</a>
-    <a href="../fundamentos/index.html">Fundamentos</a>
-    <a href="../writeups/index.html">Write-ups</a>
-    <a href="../critica/index.html">Crítica</a>
-    <a href="../whoami/whoami.html">whoami</a>
-    <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+<main>
 
-  </nav>
-
-  <main class="container">
-
-    <!-- TITLE -->
-    <section class="page-title">
-      <h1>whoami</h1>
-      <p>Quem eu sou e o que estou construindo.</p>
-    </section>
-
-    <!-- CONTENT -->
-    <section class="panel">
-
-      <h2>[ Quem sou  ]</h2>
-
-      <p>
-        Me chamo José Eduardo, muitos me conhecem como Glits :) <br>
-        Sou estudante do curso de redes de computadores, músico e entusiasta da cultura hacker.
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="hero-label">Fundamentos</span>
+      <h1>Conceitos e glossário<br>técnico</h1>
+      <p class="hero-sub">
+        Base teórica essencial para segurança da informação —
+        protocolos, vulnerabilidades, redes e muito mais.
       </p>
+    </div>
+  </section>
 
-    </section>
+  <!-- SUBTÓPICOS -->
+  <div class="wrap">
+    <div class="sec-label">
+      <h2>Tópicos</h2>
+    </div>
 
-    <section class="panel">
+    <div class="sections-grid">
 
-      <h2>[ Manifesto ]</h2>
+      <a href="web-security/index.html" class="sec-card">
+        <div class="sec-card-icon">🌐</div>
+        <h3>Web Security</h3>
+        <p>
+          OWASP Top 10, injeções, XSS, autenticação quebrada,
+          path traversal e outras vulnerabilidades web.
+        </p>
+        <span class="sec-card-link">Explorar →</span>
+      </a>
 
-      <p>
-        No meio "tech" a gente costuma valorizar e olhar demais para as nuances técnicas das nossas ferramentas,
-        pesquisas que buscam eficiência de processamento, automação, velocidade, controle... nós como seres humanos
-        construimos a sociedade com base no avanço da tecnologia, moldamos culturas inteiras a partir da técnica, mas construímos tecnologia pra quem?
-         Particularmente tenho achado díficil encontrar estudantes e profissionais preocupados com perguntas como essa. O que me preocupa bastante.
-        <br><br>
-        Entendo o avanço tecnológico como um dos pricipais motores de diferenciação entre aquelas
-        que a dominam e aquelas que não. Diferenciação essa que justifica classificar aqueles que estão "atrasados" e aqueles que são "modernos".
-        Ideias como essa ainda são motor de grande parte da nossa corrida científica e tecnológica e consequentemente também são motores de conflitos e violências,
-        justificadas pela missão de civilizar.
-        <br><br>
-        A evolução técnica sempre corre a uma velocidade muito maior do que a nossa capacidade cultural, social e política de absorvê-la. 
-        A falta de incentivo a um estudo crítico sobre tecnologia da informação, é só mais um agravante dessa distância entre a evolução técnica, a absorção, reinvenção e subversão dela mesma. 
-        Acredito que precisamos de mais iniciativas e esforços em comunidade para integrar mais as áreas que englobam
-        tecnologia da informação com as ciências humanas, caso contrário seguirem numa locomotiva rumo ao fim do mundo,
-        em nome de um progresso que não é universal, que não é para todos.
-        <br><br>
-        Defendo com unhas e dentes o desenvolvimento de tecnologias em que as relações e o bem estar humano sejam nossas prioridades.
-        <br><br>
-        Acredito muito na cultura e mentalidade hacker como ferramenta de transformação em busca de uma realidade melhor e possível.
-        <br><br>
-        <p style="text-align: right;">Hack the planet.</p>
-      </p>
+      <a href="redes/index.html" class="sec-card">
+        <div class="sec-card-icon">🔌</div>
+        <h3>Redes</h3>
+        <p>
+          Modelo OSI/TCP-IP, protocolos, roteamento,
+          firewall e segurança de redes do zero.
+        </p>
+        <span class="sec-card-link">Explorar →</span>
+      </a>
 
-    </section>
+      <!-- adicione novos tópicos aqui -->
 
-  </main>
+    </div>
+  </div>
 
-  <footer>
-    Copyleft © 2026 — G1its Tech Blog
-  </footer>
+  <!-- POSTS DO TÓPICO — renderizados via posts.js -->
+  <div class="wrap" id="posts-section" style="display:none">
+    <div class="sec-label">
+      <h2>Posts</h2>
+    </div>
+    <div class="posts-grid" id="posts-grid"></div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <span class="foot-brand">g1its.</span>
+      <div class="foot-links">
+        <a href="../fundamentos/index.html">Fundamentos</a>
+        <a href="../writeups/index.html">Write-ups</a>
+        <a href="../critica/index.html">Crítica</a>
+        <a href="../whoami/whoami.html">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+      </div>
+      <span class="foot-copy">Copyleft © 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../posts.js"></script>
+<script>
+(function () {
+  const SECTION = 'fundamentos';
+  if (!Array.isArray(POSTS) || POSTS.length === 0) return;
+
+  const filtered = POSTS
+    .filter(p => p.section === SECTION)
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (filtered.length === 0) return;
+
+  const TAG_CLASS   = { fundamentos:'tag-fundamentos', writeups:'tag-writeups', critica:'tag-critica' };
+  const THUMB_CLASS = { fundamentos:'th-fundamentos',  writeups:'th-writeups',  critica:'th-critica'  };
+
+  function fmtDate(iso) {
+    return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  const grid = document.getElementById('posts-grid');
+
+  filtered.forEach(p => {
+    const th = THUMB_CLASS[p.section] || 'th-fundamentos';
+    const tg = TAG_CLASS[p.section]   || 'tag-fundamentos';
+    const thumbHTML = p.img
+      ? `<img src="../${p.img}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : `<div class="post-thumb-inner ${th}">${p.section}</div>`;
+
+    const card = document.createElement('a');
+    card.href = p.url.startsWith('fundamentos/') ? p.url.replace('fundamentos/', '') : '../' + p.url;
+    card.className = 'post-card';
+    card.innerHTML = `
+      <div class="post-thumb">${thumbHTML}</div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="tag ${tg}">${p.tag || 'Fundamentos'}</span>
+          <span class="post-date">${fmtDate(p.date)}</span>
+        </div>
+        <h3 class="post-title">${p.title}</h3>
+        <p class="post-desc">${p.desc}</p>
+        <div class="post-footer">
+          <span class="post-author">g1its</span>
+          <span class="post-arrow">→</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('posts-section').style.display = 'block';
+})();
+</script>
 
 </body>
 </html>

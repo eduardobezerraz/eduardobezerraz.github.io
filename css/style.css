@@ -1,395 +1,172 @@
-/* ==========================================================
-   G1ITS TECH BLOG
-   STYLE.CSS
-========================================================== */
+/* G1ITS TECH BLOG */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
-/* ==========================================================
-   VARIABLES
-========================================================== */
-
-:root {
-
-  --bg: #0d1117;
-  --panel: #11161d;
-
-  --text: #c9d1d9;
-  --muted: #8b949e;
-
-  --border: #1f2937;
-
-  --accent: #7fffd4;
-  --accent-hover: #00ffaa;
-
-  --container-width: 1000px;
-
+:root{
+  --bg:       #040406;
+  --surface:  #0c0c0f;
+  --card-bg:  #0f0f13;
+  --border:   #1c1c22;
+  --border-h: #2e2e38;
+  --text-1:   #f0f0f4;
+  --text-2:   #8b8b99;
+  --text-3:   #44444f;
+  --font-sans:'Inter','Helvetica Neue',Arial,sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
 }
 
-/* ==========================================================
-   RESET
-========================================================== */
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text-1);font-family:var(--font-sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+/* NAV */
+.nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2.5rem;height:58px;
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:50;
+  background:rgba(4,4,6,0.92);backdrop-filter:blur(16px);
+  max-width:100%;
+}
+.nav-inner{display:flex;align-items:center;width:100%;max-width:1160px;margin:0 auto}
+.nav-brand{font-family:var(--font-mono);font-size:14px;font-weight:700;color:var(--text-1);letter-spacing:-0.02em;margin-right:auto}
+.nav-brand span{color:#6c6cff}
+.nav-links{display:flex;align-items:center;gap:2px;list-style:none;margin-right:1rem}
+.nav-links a{padding:6px 14px;font-size:13px;color:var(--text-2);border-radius:6px;transition:color .15s,background .15s}
+.nav-links a:hover{color:var(--text-1);background:var(--surface)}
+.nav-cta{padding:7px 16px;font-size:13px;font-weight:500;color:var(--bg);background:var(--text-1);border-radius:7px;transition:opacity .15s}
+.nav-cta:hover{opacity:.82;color:var(--bg)}
+
+/* WRAP */
+.wrap{max-width:1160px;margin:0 auto;padding:0 2.5rem}
+
+/* HERO */
+.hero{padding:80px 0 64px;border-bottom:1px solid var(--border)}
+.hero-label{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-3);display:block;margin-bottom:20px}
+.hero h1{font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;letter-spacing:-0.04em;line-height:1.06;color:var(--text-1);max-width:680px;margin-bottom:20px}
+.hero-sub{font-size:15px;color:var(--text-2);max-width:500px;line-height:1.75}
+
+/* SECTION LABEL */
+.sec-label{display:flex;align-items:center;justify-content:space-between;padding:40px 0 20px}
+.sec-label h2{font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-3)}
+.sec-label a{font-size:12px;color:var(--text-3);transition:color .15s}
+.sec-label a:hover{color:var(--text-1)}
+
+/* SECTION CARDS (apresentação das seções) */
+.sections-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border-radius:14px;overflow:hidden;border:1px solid var(--border);
+}
+.sec-card{
+  background:var(--card-bg);padding:28px 26px 26px;
+  display:flex;flex-direction:column;gap:12px;
+  transition:background .18s;
+}
+.sec-card:hover{background:#13131a}
+.sec-card-icon{
+  width:36px;height:36px;border-radius:8px;
+  border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;
+}
+.sec-card h3{font-size:15px;font-weight:600;letter-spacing:-0.02em;color:var(--text-1)}
+.sec-card p{font-size:13px;color:var(--text-2);line-height:1.65;flex:1}
+.sec-card-link{
+  display:inline-flex;align-items:center;gap:6px;
+  font-size:12px;font-weight:500;color:var(--text-3);
+  margin-top:4px;transition:color .15s;
+}
+.sec-card:hover .sec-card-link{color:var(--text-1)}
+
+/* POSTS GRID */
+.posts-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:1px;background:var(--border);
+  border-radius:14px;overflow:hidden;border:1px solid var(--border);
 }
 
-/* ==========================================================
-   BODY
-========================================================== */
-
-body {
-  background: var(--bg);
-  color: var(--text);
-
-  font-family: "JetBrains Mono", monospace;
-  line-height: 1.8;
+/* POST CARD */
+.post-card{
+  background:var(--card-bg);display:flex;flex-direction:column;
+  transition:background .18s;cursor:pointer;
 }
-
-/* ==========================================================
-   LINKS
-========================================================== */
-
-a {
-  color: var(--accent);
-  text-decoration: none;
-  transition: 0.2s ease;
+.post-card:hover{background:#13131a}
+.post-thumb{
+  width:100%;aspect-ratio:16/8;overflow:hidden;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
 }
-
-a:hover {
-  color: var(--accent-hover);
+.post-thumb-inner{
+  width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:10px;letter-spacing:.15em;text-transform:uppercase;
 }
+.th-fundamentos{background:#0d0d18;color:rgba(108,108,255,.3)}
+.th-writeups   {background:#0d1208;color:rgba(52,211,153,.3)}
+.th-critica    {background:#18080c;color:rgba(248,113,113,.3)}
 
-/* ==========================================================
-   NAVBAR
-========================================================== */
+.post-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column}
+.post-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.tag{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:4px}
+.tag-fundamentos{background:rgba(108,108,255,.15);color:#8a8aff}
+.tag-writeups   {background:rgba(52,211,153,.12); color:#34d399}
+.tag-critica    {background:rgba(248,113,113,.12);color:#f87171}
+.post-date{font-size:11px;color:var(--text-3)}
+.post-title{font-size:15px;font-weight:600;letter-spacing:-0.025em;line-height:1.35;color:var(--text-1);margin-bottom:8px}
+.post-desc{font-size:13px;color:var(--text-2);line-height:1.65;flex:1}
+.post-footer{margin-top:18px;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.post-author{font-size:11px;color:var(--text-3)}
+.post-arrow{font-size:15px;color:var(--text-3);transition:color .15s,transform .15s}
+.post-card:hover .post-arrow{color:var(--text-1);transform:translateX(3px)}
 
-.nav {
-
-  position: sticky;
-  top: 0;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 22px;
-
-  padding: 18px 20px;
-
-  background: rgba(13,17,23,.88);
-
-  backdrop-filter: blur(10px);
-
-  border-bottom: 1px solid var(--border);
-
-  z-index: 999;
+/* EMPTY STATE */
+.posts-empty{
+  padding:48px 32px;text-align:center;
+  background:var(--card-bg);border-radius:14px;
+  border:1px solid var(--border);
 }
+.posts-empty p{font-size:13px;color:var(--text-3);line-height:1.7}
+.posts-empty code{font-family:var(--font-mono);font-size:12px;color:var(--text-2);background:var(--surface);padding:2px 7px;border-radius:4px}
 
-.nav a {
-  color: #9ae6b4;
-  font-size: .95rem;
+/* WHOAMI */
+.whoami-strip{
+  margin:48px 0;padding:32px 36px;
+  background:var(--card-bg);border:1px solid var(--border);border-radius:14px;
+  display:flex;align-items:center;gap:28px;
 }
-
-/* ==========================================================
-   LAYOUT
-========================================================== */
-
-.container {
-
-  width: 100%;
-  max-width: var(--container-width);
-
-  margin: auto;
-
-  padding: 60px 20px;
+.whoami-avatar{
+  width:52px;height:52px;flex-shrink:0;border-radius:50%;
+  background:var(--surface);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-mono);font-size:16px;font-weight:700;color:var(--text-2);
 }
-
-/* ==========================================================
-   HERO
-========================================================== */
-
-.hero {
-  text-align: center;
-  margin-bottom: 60px;
-}
-
-.hero h1 {
-
-  color: var(--accent);
-
-  font-size: clamp(2rem, 6vw, 4rem);
-
-  margin-bottom: 20px;
-}
-
-.hero .subtitle {
-
-  max-width: 700px;
-
-  margin: auto;
-
-  color: var(--muted);
-}
-
-.hero .author {
-
-  margin-top: 25px;
-
-  color: #6e7681;
-
-  font-size: .9rem;
-}
-
-/* ==========================================================
-   PANELS
-========================================================== */
-
-.panel {
-
-  background: var(--panel);
-
-  border: 1px solid var(--border);
-
-  border-radius: 14px;
-
-  padding: 30px;
-
-  margin-bottom: 28px;
-}
-
-.panel:last-child {
-  margin-bottom: 0;
-}
-
-/* ==========================================================
-   HEADINGS
-========================================================== */
-
-h1 {
-  color: var(--accent);
-}
-
-h2 {
-
-  color: var(--accent);
-
-  font-size: 1.1rem;
-
-  margin-bottom: 18px;
-}
-
-h3 {
-
-  color: var(--accent);
-
-  margin-top: 25px;
-  margin-bottom: 10px;
-}
-
-/* ==========================================================
-   TEXT
-========================================================== */
-
-p {
-  margin-bottom: 1rem;
-}
-
-/* ==========================================================
-   LISTS
-========================================================== */
-
-ul,
-ol {
-
-  margin-left: 2rem;
-
-  margin-bottom: 1rem;
-}
-
-li {
-  margin-bottom: .5rem;
-}
-
-/* ==========================================================
-   ARTICLE
-   (Fundamentos / Writeups)
-========================================================== */
-
-.article {
-
-  max-width: 850px;
-
-  margin: auto;
-}
-
-.article h1 {
-
-  margin-bottom: 1rem;
-}
-
-.article h2 {
-
-  margin-top: 2.5rem;
-}
-
-.article h3 {
-
-  margin-top: 1.5rem;
-}
-
-.article p {
-
-  margin-bottom: 1rem;
-}
-
-/* ==========================================================
-   CODE BLOCKS
-========================================================== */
-
-pre {
-
-  overflow-x: auto;
-
-  padding: 20px;
-
-  margin: 20px 0;
-
-  border-radius: 10px;
-
-  background: #0b0f14;
-
-  border: 1px solid #1c2633;
-
-  color: #d1d5db;
-
-  line-height: 1.6;
-}
-
-code {
-  font-family: inherit;
-}
-
-/* ==========================================================
-   QUOTES
-========================================================== */
-
-.quote {
-
-  text-align: right;
-
-  color: #7d8590;
-
-  margin-top: 60px;
-  margin-bottom: 40px;
-}
-
-/* ==========================================================
-   ASCII
-========================================================== */
-
-.ascii {
-
-  display: flex;
-
-  justify-content: flex-end;
-
-  overflow-x: auto;
-
-  margin-top: 40px;
-}
-
-.ascii pre {
-
-  background: transparent;
-
-  border: none;
-
-  padding: 0;
-  margin: 0;
-
-  white-space: pre;
-
-  line-height: 1;
-
-  font-size: 14px;
-
-  color: var(--accent);
-}
-
-/* ==========================================================
-   FOOTER
-========================================================== */
-
-footer {
-
-  border-top: 1px solid var(--border);
-
-  text-align: center;
-
-  padding: 25px;
-
-  color: #6e7681;
-
-  font-size: .85rem;
-}
-
-/* ==========================================================
-   TABLES
-========================================================== */
-
-table {
-
-  width: 100%;
-
-  border-collapse: collapse;
-
-  margin: 20px 0;
-}
-
-th,
-td {
-
-  border: 1px solid var(--border);
-
-  padding: 12px;
-
-  text-align: left;
-}
-
-th {
-  background: #161b22;
-}
-
-/* ==========================================================
-   RESPONSIVE
-========================================================== */
-
-@media (max-width: 768px) {
-
-  .nav {
-
-    flex-wrap: wrap;
-
-    gap: 14px;
-  }
-
-  .container {
-    padding: 40px 15px;
-  }
-
-  .panel {
-    padding: 24px;
-  }
-
-  .hero {
-    margin-bottom: 40px;
-  }
-
-  .hero h1 {
-    font-size: 2.4rem;
-  }
-
-  .ascii pre {
-    font-size: 11px;
-  }
+.whoami-text h3{font-size:15px;font-weight:600;letter-spacing:-0.02em;margin-bottom:4px}
+.whoami-text p{font-size:13px;color:var(--text-2);line-height:1.6}
+.whoami-links{margin-left:auto;display:flex;gap:10px;flex-shrink:0}
+.whoami-btn{padding:8px 18px;font-size:13px;font-weight:500;border:1px solid var(--border);border-radius:8px;color:var(--text-2);transition:all .15s}
+.whoami-btn:hover{border-color:var(--border-h);color:var(--text-1)}
+.whoami-btn.primary{background:var(--text-1);color:var(--bg);border-color:var(--text-1)}
+.whoami-btn.primary:hover{opacity:.85}
+
+/* QUOTE */
+.quote-bar{text-align:center;padding:48px 0 56px;border-top:1px solid var(--border);margin-top:8px}
+.quote-bar p{font-size:13px;color:var(--text-3);letter-spacing:.02em}
+.quote-bar p em{color:var(--text-2);font-style:normal}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:20px 0}
+.foot-inner{display:flex;align-items:center;justify-content:space-between}
+.foot-brand{font-family:var(--font-mono);font-size:12px;color:var(--text-3)}
+.foot-links{display:flex;gap:20px}
+.foot-links a{font-size:12px;color:var(--text-3);transition:color .15s}
+.foot-links a:hover{color:var(--text-1)}
+.foot-copy{font-size:11px;color:var(--text-3)}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .wrap{padding:0 1.25rem}
+  .nav-inner{padding:0 1.25rem}
+  .nav-links{display:none}
+  .sections-grid{grid-template-columns:1fr}
+  .posts-grid{grid-template-columns:1fr}
+  .whoami-strip{flex-wrap:wrap;gap:16px}
+  .whoami-links{margin-left:0;width:100%}
 }

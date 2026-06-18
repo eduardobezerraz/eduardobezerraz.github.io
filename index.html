@@ -2,199 +2,208 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8">
-
-  <title>G1its Tech Blog</title>
-
+  <title>G1its — Security Research Blog</title>
   <meta name="description" content="Write-ups, research notes e estudos sobre segurança ofensiva.">
-  <meta name="keywords" content="security, hacking, ctf, web security, reverse engineering">
-  <meta name="author" content="José Eduardo Bezerra de Medeiros">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-  <!-- FONT -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-  <link
-    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-
 </head>
-
 <body>
 
-  <!-- =====================================
-       NAVBAR
-  ====================================== -->
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-brand">g1its<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="fundamentos/index.html">Fundamentos</a></li>
+      <li><a href="writeups/index.html">Write-ups</a></li>
+      <li><a href="critica/index.html">Crítica</a></li>
+      <li><a href="whoami/whoami.html">whoami</a></li>
+    </ul>
+    <a href="https://github.com/eduardobezerraz" target="_blank" class="nav-cta">GitHub ↗</a>
+  </div>
+</nav>
 
-  <nav class="nav">
+<main>
 
-    <a href="index.html">Home</a>
-    <a href="fundamentos/index.html">Fundamentos</a>
-    <a href="writeups/index.html">Write-ups</a>
-    <a href="critica/index.html">Crítica</a>
-    <a href="whoami/whoami.html">whoami</a>
-    <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
-
-  </nav>
-
-  <!-- =====================================
-       MAIN
-  ====================================== -->
-
-  <main class="container">
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-      <h1>
-        G1its Tech blog
-      </h1>
-
-      <p class="subtitle">
-        Reflexões filosóficas sobre tecnologia e sociedade,
-        glossários de fundamentos técnicos voltados segurança da informação,
-        passo-a-passo e explicações de como quebrar coisas.
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="hero-label">Security research &amp; notes</span>
+      <h1>Hacking, fundamentos<br>e crítica tecnológica</h1>
+      <p class="hero-sub">
+        Documentação de estudos sobre segurança ofensiva, redes e
+        reflexões sobre o impacto social da tecnologia.
       </p>
-
-    </section>
-
-    <!-- INTRO -->
-
-    <section class="panel">
-
-      <h2>
-        [ Introdução ]
-      </h2>
-
-      <p>
-      Esse site é meu blog pessoal, onde eu documentos meus estudos e reflexões sobre hacking, 
-      cibersegurança e tecnologia em geral :)
-      </p>
-
-      <br>
-
-    </section>
-
-    <!-- FUNDAMENTOS -->
-
-    <section class="panel">
-
-      <h2>
-        [
-        <a href="fundamentos.html">
-          Fundamentos
-        </a>
-        ]
-      </h2>
-
-      <p>
-        Glossário técnico e fundamentos essenciais para segurança da informação.
-      </p>
-
-    </section>
-
-    <!-- WRITEUPS -->
-
-    <section class="panel">
-
-      <h2>
-        [
-        <a href="writeups.html">
-          Write-ups
-        </a>
-        ]
-      </h2>
-
-      <p>
-        Documentação detalhada de desafios
-        de CTF, laboratórios, exploração
-        de vulnerabilidades e estudos
-        práticos organizados por área técnica.
-      </p>
-
-    </section>
-
-    <!-- CRÍTICA -->
-
-    <section class="panel">
-
-      <h2>
-        [
-        <a href="critica.html">
-          Crítica
-        </a>
-        ]
-      </h2>
-
-      <p>
-        Textos com reflexões críticas sobre o uso da tecnologia na sociedade.
-      </p>
-
-    </section>    
-
-    <!-- TERMINAL STYLE PANEL -->
-
-    <section class="panel">
-
-
-
-<pre><code>
-> whoami
-Computer Networks Student
-
-> current_focus
-Segurança web
-Segurança de redes
-Segurança de aplicações
-Sistemas Complexos
-Impacto social do uso de tecnologias na sociedade 
-
-
-</code></pre>
-
-    </section>
-
-
-
-    <!-- ASCII -->
-
-    <div class="ascii">
-
-    <pre>
-             ▄▄▄        ██
-            █▀██        ▀▀       ██
-  ▄███▄██     ██      ████     ███████   ▄▄█████▄
- ██▀  ▀██     ██        ██       ██      ██▄▄▄▄ ▀
- ██    ██     ██        ██       ██       ▀▀▀▀██▄
- ▀██▄▄███  ▄▄▄██▄▄▄  ▄▄▄██▄▄▄    ██▄▄▄   █▄▄▄▄▄██
-  ▄▀▀▀ ██  ▀▀▀▀▀▀▀▀  ▀▀▀▀▀▀▀▀     ▀▀▀▀    ▀▀▀▀▀▀
-  ▀████▀▀
-
-   knowledge • curiosity • persistence :)
-    </pre>
-
     </div>
-    
-    <!-- QUOTE -->
+  </section>
 
-    <div class="quote">
-      Knowledge grows when shared.<br>
-      Silence benefits only ignorance.
+  <!-- SEÇÕES -->
+  <div class="wrap">
+    <div class="sec-label">
+      <h2>Seções</h2>
     </div>
 
-  </main>
+    <div class="sections-grid">
 
-  <!-- =====================================
-       FOOTER
-  ====================================== -->
+      <a href="fundamentos/index.html" class="sec-card">
+        <div class="sec-card-icon">📖</div>
+        <h3>Fundamentos</h3>
+        <p>
+          Glossário técnico e conceitos essenciais de segurança da informação —
+          web security, redes, protocolos e além.
+        </p>
+        <span class="sec-card-link">Explorar fundamentos →</span>
+      </a>
 
-  <footer>
-    Copyleft © 2026 — G1its Tech Blog
-  </footer>
+      <a href="writeups/index.html" class="sec-card">
+        <div class="sec-card-icon">🔓</div>
+        <h3>Write-ups</h3>
+        <p>
+          Documentação detalhada de desafios de CTF, laboratórios e
+          exploração de vulnerabilidades, organizados por área técnica.
+        </p>
+        <span class="sec-card-link">Ver write-ups →</span>
+      </a>
+
+      <a href="critica/index.html" class="sec-card">
+        <div class="sec-card-icon">🔬</div>
+        <h3>Crítica</h3>
+        <p>
+          Textos com reflexões críticas sobre vigilância, privacidade,
+          poder digital e o uso da tecnologia na sociedade.
+        </p>
+        <span class="sec-card-link">Ler crítica →</span>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- POSTS RECENTES — renderizados via posts.js -->
+  <div class="wrap" id="posts-section" style="display:none">
+    <div class="sec-label">
+      <h2>Posts recentes</h2>
+    </div>
+    <div class="posts-grid" id="posts-grid"></div>
+  </div>
+
+  <!-- EMPTY STATE — visível enquanto não há posts -->
+  <div class="wrap" id="empty-state">
+    <div class="sec-label">
+      <h2>Posts recentes</h2>
+    </div>
+    <div class="posts-empty">
+      <p>
+        Nenhum post publicado ainda.<br>
+        Para adicionar um post, edite <code>posts.js</code> na raiz do projeto.
+      </p>
+    </div>
+  </div>
+
+  <!-- WHOAMI -->
+  <div class="wrap">
+    <div class="whoami-strip">
+      <div class="whoami-avatar"></div>
+      <div class="whoami-text">
+        <h3>José Eduardo Bezerra de Medeiros</h3>
+        <p>Estudante de Redes de Computadores — segurança web, redes, CTFs e impacto social da tecnologia.</p>
+      </div>
+      <div class="whoami-links">
+        <a href="whoami/whoami.html" class="whoami-btn">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank" class="whoami-btn primary">GitHub ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- QUOTE -->
+  <div class="wrap">
+    <div class="quote-bar">
+      <p><em>Knowledge grows when shared.</em> Silence benefits only ignorance.</p>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <span class="foot-brand">g1its.</span>
+      <div class="foot-links">
+        <a href="fundamentos/index.html">Fundamentos</a>
+        <a href="writeups/index.html">Write-ups</a>
+        <a href="critica/index.html">Crítica</a>
+        <a href="whoami/whoami.html">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+      </div>
+      <span class="foot-copy">Copyleft © 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="posts.js"></script>
+<script>
+(function () {
+  if (!Array.isArray(POSTS) || POSTS.length === 0) return;
+
+  // ordena do mais recente para o mais antigo
+  const sorted = [...POSTS].sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const THUMB_CLASS = {
+    fundamentos: 'th-fundamentos',
+    writeups:    'th-writeups',
+    critica:     'th-critica',
+  };
+  const TAG_CLASS = {
+    fundamentos: 'tag-fundamentos',
+    writeups:    'tag-writeups',
+    critica:     'tag-critica',
+  };
+
+  function fmtDate(iso) {
+    const d = new Date(iso + 'T12:00:00');
+    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  }
+
+  const grid = document.getElementById('posts-grid');
+
+  sorted.forEach(p => {
+    const th  = THUMB_CLASS[p.section] || 'th-fundamentos';
+    const tg  = TAG_CLASS[p.section]   || 'tag-fundamentos';
+    const sec = p.section.charAt(0).toUpperCase() + p.section.slice(1);
+
+    const thumbHTML = p.img
+      ? `<img src="${p.img}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : `<div class="post-thumb-inner ${th}">${p.section}</div>`;
+
+    const card = document.createElement('a');
+    card.href = p.url;
+    card.className = 'post-card';
+    card.innerHTML = `
+      <div class="post-thumb">
+        ${thumbHTML}
+      </div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="tag ${tg}">${p.tag || sec}</span>
+          <span class="post-date">${fmtDate(p.date)}</span>
+        </div>
+        <h3 class="post-title">${p.title}</h3>
+        <p class="post-desc">${p.desc}</p>
+        <div class="post-footer">
+          <span class="post-author">g1its</span>
+          <span class="post-arrow">→</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('posts-section').style.display = 'block';
+  document.getElementById('empty-state').style.display   = 'none';
+})();
+</script>
 
 </body>
 </html>
-

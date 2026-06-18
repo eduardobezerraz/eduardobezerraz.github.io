@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Web Security — Fundamentos — G1its</title>
+  <meta name="description" content="Fundamentos de segurança web: OWASP, injeções, XSS, autenticação e mais.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-brand">g1its<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="../../fundamentos/index.html" class="active">Fundamentos</a></li>
+      <li><a href="../../writeups/index.html">Write-ups</a></li>
+      <li><a href="../../critica/index.html">Crítica</a></li>
+      <li><a href="../../whoami/whoami.html">whoami</a></li>
+    </ul>
+    <a href="https://github.com/eduardobezerraz" target="_blank" class="nav-cta">GitHub ↗</a>
+  </div>
+</nav>
+
+<main>
+
+  <!-- BREADCRUMB -->
+  <div class="wrap" style="padding-top:28px">
+    <p style="font-size:12px;color:var(--text-3)">
+      <a href="../../fundamentos/index.html" style="color:var(--text-3);transition:color .15s" onmouseover="this.style.color='var(--text-1)'" onmouseout="this.style.color='var(--text-3)'">Fundamentos</a>
+      &nbsp;/&nbsp; Web Security
+    </p>
+  </div>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <span class="hero-label">Fundamentos › Web Security</span>
+      <h1>Segurança<br>de aplicações web</h1>
+      <p class="hero-sub">
+        OWASP Top 10, injeções, XSS, autenticação quebrada,
+        path traversal e outras vulnerabilidades web.
+      </p>
+    </div>
+  </section>
+
+  <!-- POSTS — renderizados via posts.js filtrados por tag -->
+  <div class="wrap" id="posts-section" style="display:none">
+    <div class="sec-label">
+      <h2>Posts</h2>
+    </div>
+    <div class="posts-grid" id="posts-grid"></div>
+  </div>
+
+  <!-- EMPTY STATE -->
+  <div class="wrap" id="empty-state">
+    <div class="sec-label">
+      <h2>Posts</h2>
+    </div>
+    <div class="posts-empty">
+      <p>
+        Nenhum post publicado ainda neste tópico.<br>
+        Adicione em <code>posts.js</code> com <code>section: "fundamentos"</code>.
+      </p>
+    </div>
+  </div>
+
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <span class="foot-brand">g1its.</span>
+      <div class="foot-links">
+        <a href="../../fundamentos/index.html">Fundamentos</a>
+        <a href="../../writeups/index.html">Write-ups</a>
+        <a href="../../critica/index.html">Crítica</a>
+        <a href="../../whoami/whoami.html">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+      </div>
+      <span class="foot-copy">Copyleft © 2026</span>
+    </div>
+  </div>
+</footer>
+
+<script src="../../posts.js"></script>
+<script>
+(function () {
+  if (!Array.isArray(POSTS) || POSTS.length === 0) return;
+
+  const filtered = POSTS
+    .filter(p => p.section === 'fundamentos' && p.url.includes('web-security'))
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  if (filtered.length === 0) return;
+
+  function fmtDate(iso) {
+    return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+  }
+
+  const grid = document.getElementById('posts-grid');
+
+  filtered.forEach(p => {
+    const thumbHTML = p.img
+      ? `<img src="../../${p.img}" alt="${p.title}" style="width:100%;height:100%;object-fit:cover;display:block;">`
+      : `<div class="post-thumb-inner th-fundamentos">web security</div>`;
+
+    const card = document.createElement('a');
+    card.href = '../../' + p.url;
+    card.className = 'post-card';
+    card.innerHTML = `
+      <div class="post-thumb">${thumbHTML}</div>
+      <div class="post-body">
+        <div class="post-meta">
+          <span class="tag tag-fundamentos">${p.tag || 'Web Security'}</span>
+          <span class="post-date">${fmtDate(p.date)}</span>
+        </div>
+        <h3 class="post-title">${p.title}</h3>
+        <p class="post-desc">${p.desc}</p>
+        <div class="post-footer">
+          <span class="post-author">g1its</span>
+          <span class="post-arrow">→</span>
+        </div>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  document.getElementById('posts-section').style.display = 'block';
+  document.getElementById('empty-state').style.display   = 'none';
+})();
+</script>
+
+</body>
+</html>
