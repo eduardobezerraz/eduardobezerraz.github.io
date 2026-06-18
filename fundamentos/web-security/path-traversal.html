@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Path Traversal — Web Security — G1its</title>
+  <meta name="description" content="O que é path traversal, como explorar e como prevenir. Explicação simples e direta.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    /* ── POST LAYOUT ── */
+    .post-wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 2.5rem 80px;
+    }
+
+    /* header do post */
+    .post-header { padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+    .post-header .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 20px; }
+    .post-header .breadcrumb a { color: var(--text-3); transition: color .15s; }
+    .post-header .breadcrumb a:hover { color: var(--text-1); }
+    .post-header .post-tags { display: flex; gap: 8px; margin-bottom: 20px; }
+    .post-header h1 {
+      font-size: clamp(1.8rem, 4vw, 2.6rem);
+      font-weight: 700; letter-spacing: -0.04em;
+      line-height: 1.1; color: var(--text-1); margin-bottom: 16px;
+    }
+    .post-header .post-meta-line {
+      font-size: 12px; color: var(--text-3);
+      display: flex; align-items: center; gap: 16px;
+    }
+
+    /* corpo do post */
+    .post-body { font-size: 15px; color: var(--text-2); line-height: 1.8; }
+    .post-body h2 {
+      font-size: 1.15rem; font-weight: 700;
+      letter-spacing: -0.03em; color: var(--text-1);
+      margin: 2.5rem 0 1rem;
+    }
+    .post-body h3 {
+      font-size: 0.95rem; font-weight: 600;
+      color: var(--text-1); margin: 2rem 0 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    .post-body p { margin-bottom: 1.1rem; }
+    .post-body strong { color: var(--text-1); font-weight: 600; }
+    .post-body a { color: var(--text-1); text-decoration: underline; text-underline-offset: 3px; opacity: .7; transition: opacity .15s; }
+    .post-body a:hover { opacity: 1; }
+
+    /* inline code */
+    .post-body code {
+      font-family: var(--font-mono); font-size: 12.5px;
+      background: #15151c; color: #a8b4ff;
+      padding: 2px 7px; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+
+    /* blocos de código */
+    .code-block {
+      background: #0d0d14; border: 1px solid var(--border);
+      border-radius: 10px; overflow: hidden; margin: 1.5rem 0;
+    }
+    .code-block-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 16px;
+      background: #12121a; border-bottom: 1px solid var(--border);
+      font-family: var(--font-mono); font-size: 11px; color: var(--text-3);
+    }
+    .code-block-header .dots { display: flex; gap: 5px; }
+    .code-block-header .dot {
+      width: 9px; height: 9px; border-radius: 50%;
+    }
+    .code-block-header .dot.r { background: #ff5f57; }
+    .code-block-header .dot.y { background: #febc2e; }
+    .code-block-header .dot.g { background: #28c840; }
+    .code-block pre {
+      padding: 18px 20px; margin: 0; overflow-x: auto;
+      font-family: var(--font-mono); font-size: 13px;
+      line-height: 1.7; color: #c9d1d9;
+    }
+    .hl-url    { color: #79c0ff; }
+    .hl-param  { color: #ffa657; }
+    .hl-value  { color: #a5d6ff; }
+    .hl-danger { color: #f87171; }
+    .hl-ok     { color: #34d399; }
+    .hl-gray   { color: #6e7681; }
+    .hl-comment{ color: #8b949e; font-style: italic; }
+
+    /* callouts */
+    .callout {
+      display: flex; gap: 14px;
+      padding: 16px 18px; border-radius: 8px;
+      margin: 1.5rem 0; font-size: 14px; line-height: 1.7;
+    }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.info  { background: rgba(108,108,255,.08); border-left: 3px solid #6c6cff; }
+    .callout.warn  { background: rgba(251,191,36,.07);  border-left: 3px solid #fbbf24; }
+    .callout.danger{ background: rgba(248,113,113,.08); border-left: 3px solid #f87171; }
+    .callout.tip   { background: rgba(52,211,153,.07);  border-left: 3px solid #34d399; }
+
+    /* diagrama de diretório */
+    .dir-tree {
+      font-family: var(--font-mono); font-size: 13px;
+      background: #0d0d14; border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px 24px;
+      line-height: 2; color: var(--text-2); margin: 1.5rem 0;
+    }
+    .dir-tree .dir  { color: #79c0ff; }
+    .dir-tree .file { color: #c9d1d9; }
+    .dir-tree .evil { color: #f87171; font-weight: 700; }
+    .dir-tree .good { color: #34d399; }
+
+    /* lista */
+    .post-body ul, .post-body ol {
+      padding-left: 1.4rem; margin-bottom: 1.2rem;
+    }
+    .post-body li { margin-bottom: 0.4rem; }
+
+    /* table of contents */
+    .toc {
+      background: var(--card-bg); border: 1px solid var(--border);
+      border-radius: 10px; padding: 20px 24px; margin-bottom: 2.5rem;
+    }
+    .toc h4 { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+    .toc ol  { padding-left: 1.2rem; counter-reset: toc; list-style: none; }
+    .toc li  { counter-increment: toc; margin-bottom: 6px; }
+    .toc li::before { content: counter(toc) "."; color: var(--text-3); font-size: 11px; margin-right: 8px; font-family: var(--font-mono); }
+    .toc a   { font-size: 13px; color: var(--text-2); transition: color .15s; }
+    .toc a:hover { color: var(--text-1); text-decoration: none; }
+
+    /* seção de navegação entre posts */
+    .post-nav {
+      display: flex; justify-content: space-between; align-items: center;
+      padding-top: 40px; margin-top: 48px;
+      border-top: 1px solid var(--border);
+    }
+    .post-nav a { font-size: 13px; color: var(--text-3); transition: color .15s; }
+    .post-nav a:hover { color: var(--text-1); }
+
+    @media (max-width: 768px) {
+      .post-wrap { padding: 0 1.25rem 64px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-brand">g1its<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="../../fundamentos/index.html" class="active">Fundamentos</a></li>
+      <li><a href="../../writeups/index.html">Write-ups</a></li>
+      <li><a href="../../critica/index.html">Crítica</a></li>
+      <li><a href="../../whoami/whoami.html">whoami</a></li>
+    </ul>
+    <a href="https://github.com/eduardobezerraz" target="_blank" class="nav-cta">GitHub ↗</a>
+  </div>
+</nav>
+
+<main>
+  <div class="post-wrap">
+
+    <!-- HEADER -->
+    <header class="post-header">
+      <p class="breadcrumb">
+        <a href="../../fundamentos/index.html">Fundamentos</a>
+        &nbsp;/&nbsp;
+        <a href="../../fundamentos/web-security/index.html">Web Security</a>
+        &nbsp;/&nbsp; Path Traversal
+      </p>
+      <div class="post-tags">
+        <span class="tag tag-fundamentos">Web Security</span>
+      </div>
+      <h1>Path Traversal</h1>
+      <div class="post-meta-line">
+        <span>g1its</span>
+        <span>·</span>
+        <span>Jun 2026</span>
+      </div>
+    </header>
+
+    <!-- CORPO -->
+    <article class="post-body">
+
+      <!-- TOC -->
+      <nav class="toc">
+        <h4>Conteúdo</h4>
+        <ol>
+          <li><a href="#o-que-e">O que é path traversal?</a></li>
+          <li><a href="#como-funciona">Como funciona na prática</a></li>
+          <li><a href="#obstaculos">Obstáculos e como contorná-los</a></li>
+          <li><a href="#prevencao">Como prevenir</a></li>
+        </ol>
+      </nav>
+
+      <!-- 1. O QUE É -->
+      <h2 id="o-que-e">O que é path traversal?</h2>
+
+      <p>
+        Path traversal (também chamado de <strong>directory traversal</strong>) é uma vulnerabilidade
+        que permite a um atacante <strong>ler arquivos arbitrários no servidor</strong>, possibilitando
+        o acesso a arquivos que a aplicação não deveria expor.
+      </p>
+
+      <div class="callout danger">
+        <span class="callout-icon">⚠️</span>
+        <span>Em casos mais graves, o atacante consegue também <strong>escrever</strong> arquivos no servidor,
+        modificando o comportamento da aplicação e chegando ao controle total da máquina.</span>
+      </div>
+
+      <!-- 2. COMO FUNCIONA -->
+      <h2 id="como-funciona">Como funciona na prática</h2>
+
+      <p>
+        Imagine uma loja online que exibe imagens de produtos.
+        Para carregar cada imagem, ela faz uma requisição assim:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>HTML da página</span>
+        </div>
+        <pre><span class="hl-gray">&lt;img src="</span><span class="hl-url">/loadImage</span><span class="hl-gray">?</span><span class="hl-param">filename</span>=<span class="hl-value">218.png</span><span class="hl-gray">"&gt;</span></pre>
+      </div>
+
+      <p>
+        O servidor recebe o parâmetro <code>filename</code> e busca o arquivo dentro
+        de uma pasta base — por exemplo, <code>/var/www/images/</code>.
+        Então ele lê o caminho final:
+      </p>
+
+      <div class="dir-tree">
+        <span class="good">/var/www/images/</span><span class="file">218.png</span>  <span class="hl-comment"># Esse é o comportamento esperado.</span>
+      </div>
+
+      <p>
+        O problema: a aplicação não valida o que chega no parâmetro <code>filename</code>.
+        Um atacante pode mandar isso:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>Requisição maliciosa</span>
+        </div>
+        <pre><span class="hl-url">https://site-vulneravel.com/loadImage</span>?<span class="hl-param">filename</span>=<span class="hl-danger">../../../etc/passwd</span></pre>
+      </div>
+
+      <p>
+        O servidor monta o caminho <code>/var/www/images/../../../etc/passwd</code>
+        e lê exatamente isso. Veja o que acontece passo a passo:
+      </p>
+
+      <div class="dir-tree">
+        <span class="dir">/var/www/images/</span>   <span class="hl-comment">← ponto de partida</span>
+        <br><span class="hl-danger">../</span>                 <span class="hl-comment">← sobe para /var/www/</span>
+        <br><span class="hl-danger">../</span>                 <span class="hl-comment">← sobe para /var/</span>
+        <br><span class="hl-danger">../</span>                 <span class="hl-comment">← sobe para / (raiz)</span>
+        <br><span class="evil">etc/passwd</span>          <span class="hl-comment">← arquivo lido!</span>
+      </div>
+
+      <div class="callout info">
+        <span class="callout-icon">💡</span>
+        <span>
+          <code>../</code> é uma sequência válida em sistemas de arquivos que significa
+          "suba um nível no diretório". No Windows, funciona tanto <code>../</code> quanto
+          <code>..\</code>.
+        </span>
+      </div>
+
+      <h3>No Windows também funciona</h3>
+
+      <p>O mesmo ataque em um servidor Windows ficaria assim:</p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>Windows</span>
+        </div>
+        <pre><span class="hl-url">https://site-vulneravel.com/loadImage</span>?<span class="hl-param">filename</span>=<span class="hl-danger">..\..\..\windows\win.ini</span></pre>
+      </div>
+
+      <!-- 3. OBSTÁCULOS -->
+      <h2 id="obstaculos">Obstáculos e como contorná-los</h2>
+
+      <p>
+        Muitas aplicações tentam se proteger bloqueando ou removendo <code>../</code>
+        da entrada do usuário. Mas essas defesas costumam ser frágeis e têm bypasses conhecidos.
+      </p>
+
+      <h3>1. Caminho absoluto</h3>
+
+      <p>
+        Se a aplicação apenas bloqueia <code>../</code> mas aceita caminhos absolutos,
+        você pode referenciar o arquivo diretamente:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>Sem precisar de ../</span>
+        </div>
+        <pre><span class="hl-param">filename</span>=<span class="hl-danger">/etc/passwd</span></pre>
+      </div>
+
+      <h3>2. Sequências aninhadas</h3>
+
+      <p>
+        Se a aplicação remove <code>../</code> mas não de forma recursiva,
+        sequências aninhadas se reconstroem sozinhas após a remoção:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>Bypass por sequência aninhada</span>
+        </div>
+        <pre><span class="hl-param">filename</span>=<span class="hl-danger">....//....//....//etc/passwd</span>
+<span class="hl-comment">
+# remover "../" de "....//":
+# ....// - ../  =  ../  </span></pre>
+      </div>
+
+      <h3>3. Encoding na URL</h3>
+
+      <p>
+        O servidor web pode estar sanitizando a URL, mas a aplicação processa o valor
+        já decodificado. Encodar os caracteres contorna a sanitização:
+        <br><br>
+        No padrão URL Encoding, caracteres especiais são representados em hexadecimal precedidos por %:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>URL encoding</span>
+        </div>
+        
+        <pre><span class="hl-comment"># ../  →  URL encoded</span>
+<span class="hl-danger">%2e%2e%2f</span>
+
+<span class="hl-comment"># ../  →  double URL encoded</span>
+<span class="hl-danger">%252e%252e%252f</span>
+
+<span class="hl-comment"># variações não-padrão que podem funcionar</span>
+<span class="hl-danger">..%c0%af</span>
+<span class="hl-danger">..%ef%bc%8f</span></pre>
+      </div>
+
+      <h3>4. Pasta base obrigatória no início</h3>
+
+      <p>
+        Algumas aplicações exigem que o <code>filename</code> comece com a pasta base.
+        É possível satisfazer essa checagem e depois sair dela com <code>../</code>:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>Bypass com pasta base no início</span>
+        </div>
+        <pre><span class="hl-param">filename</span>=<span class="hl-ok">/var/www/images/</span><span class="hl-danger">../../../etc/passwd</span>
+<span class="hl-comment">
+# começa com a pasta esperada 
+# mas sai dela em seguida </span></pre>
+      </div>
+
+      <h3>5. Extensão obrigatória no final</h3>
+
+      <p>
+        Se a aplicação exige que o arquivo termine em <code>.png</code>,
+        um null byte <code>%00</code> encerra o caminho antes da extensão ser verificada:
+      </p>
+
+      <div class="code-block">
+        <div class="code-block-header">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>Bypass com null byte</span>
+        </div>
+        <pre><span class="hl-param">filename</span>=<span class="hl-danger">../../../etc/passwd</span><span class="hl-danger">%00</span><span class="hl-ok">.png</span>
+<span class="hl-comment">
+# a aplicação vê ".png" no final 
+# mas o sistema lê só até o %00 </span></pre>
+      </div>
+
+      <div class="callout warn">
+        <span class="callout-icon">🔍</span>
+        <span>
+          O bypass com null byte funciona em linguagens mais antigas (PHP &lt; 5.3.4, por exemplo).
+          Em ambientes modernos geralmente não funciona, mas vale testar.
+        </span>
+      </div>
+
+      <!-- 4. PREVENÇÃO -->
+      <h2 id="prevencao">Como prevenir</h2>
+
+      <p>
+        A defesa mais eficaz é simples: <strong>não passe entrada do usuário diretamente
+        para APIs de filesystem</strong>. Sempre que possível, redesenhe a funcionalidade
+        para que o usuário selecione de uma lista de valores fixos, sem controle sobre
+        o caminho real do arquivo.
+      </p>
+
+      <p>Quando isso não for possível, use <strong>duas camadas de defesa juntas</strong>:</p>
+
+      <ul>
+        <li><strong>Valide a entrada</strong> — idealmente com uma whitelist de nomes permitidos.
+        Se não for possível, aceite somente caracteres alfanuméricos.</li>
+        <li><strong>Canonicalize o caminho</strong> — monte o caminho final com a pasta base
+        e verifique que ele ainda começa com essa pasta antes de abrir o arquivo.</li>
+      </ul>
+
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — defesa com canonicalização</span>
+      </div>
+      <pre><span class="hl-kw">import</span> os
+ 
+BASE_DIR = <span class="hl-str">"/var/www/images"</span>
+ 
+<span class="hl-kw">def</span> <span class="hl-fn">load_image</span>(filename):
+    <span class="hl-comment"># monta o caminho e resolve todos os ../</span>
+    full_path = os.path.<span class="hl-fn">realpath</span>(
+        os.path.<span class="hl-fn">join</span>(BASE_DIR, filename)
+    )
+ 
+    <span class="hl-comment"># verifica se o caminho resolvido ainda está dentro da pasta base</span>
+    <span class="hl-kw">if not</span> full_path.<span class="hl-fn">startswith</span>(BASE_DIR + <span class="hl-str">"/"</span>):
+        <span class="hl-kw">raise</span> <span class="hl-fn">PermissionError</span>(<span class="hl-str">"acesso negado"</span>)
+ 
+    <span class="hl-kw">with</span> <span class="hl-fn">open</span>(full_path, <span class="hl-str">"rb"</span>) <span class="hl-kw">as</span> f:
+        <span class="hl-kw">return</span> f.<span class="hl-fn">read</span>()
+    </div>
+ 
+    <div class="callout tip">
+      <span class="callout-icon">✅</span>
+      <span>
+        <code>os.path.realpath()</code> resolve todos os <code>../</code>, links
+        simbólicos e caminhos absolutos <strong>antes</strong> da checagem.
+        Por isso funciona contra todos os bypasses vistos acima.
+      </span>
+    </div>
+
+
+    </article>
+
+    <!-- NAVEGAÇÃO ENTRE POSTS -->
+    <nav class="post-nav">
+      <a href="../../fundamentos/web-security/index.html">← Web Security</a>
+      <a href="../../fundamentos/index.html">Fundamentos →</a>
+    </nav>
+
+  </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <span class="foot-brand">g1its.</span>
+      <div class="foot-links">
+        <a href="../../fundamentos/index.html">Fundamentos</a>
+        <a href="../../writeups/index.html">Write-ups</a>
+        <a href="../../critica/index.html">Crítica</a>
+        <a href="../../whoami/whoami.html">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+      </div>
+      <span class="foot-copy">Copyleft © 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
