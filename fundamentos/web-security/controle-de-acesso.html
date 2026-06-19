@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Controle de Acesso — Web Security — G1its</title>
+  <meta name="description" content="O que é controle de acesso, como ele quebra na prática e como prevenir. Explicação simples e direta.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .post-wrap { max-width: 720px; margin: 0 auto; padding: 0 2.5rem 80px; }
+
+    .post-header { padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+    .post-header .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 20px; }
+    .post-header .breadcrumb a { color: var(--text-3); transition: color .15s; }
+    .post-header .breadcrumb a:hover { color: var(--text-1); }
+    .post-header .post-tags { display: flex; gap: 8px; margin-bottom: 20px; }
+    .post-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; color: var(--text-1); margin-bottom: 16px; }
+    .post-header .post-meta-line { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 16px; }
+
+    .post-body { font-size: 15px; color: var(--text-2); line-height: 1.8; }
+    .post-body h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.03em; color: var(--text-1); margin: 2.5rem 0 1rem; }
+    .post-body h4 { font-size: 0.95rem; font-weight: 600; color: var(--text-1); margin: 2rem 0 0.75rem; letter-spacing: -0.01em; }
+    .post-body p { margin-bottom: 1.1rem; }
+    .post-body strong { color: var(--text-1); font-weight: 600; }
+    .post-body a { color: var(--text-1); text-decoration: underline; text-underline-offset: 3px; opacity: .7; transition: opacity .15s; }
+    .post-body a:hover { opacity: 1; }
+    .post-body ul, .post-body ol { padding-left: 1.4rem; margin-bottom: 1.2rem; }
+    .post-body li { margin-bottom: 0.4rem; }
+
+    .post-body code { font-family: var(--font-mono); font-size: 12.5px; background: #15151c; color: #a8b4ff; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--border); }
+
+    .code-block { background: #0d0d14; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
+    .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #12121a; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
+    .code-block-header .dots { display: flex; gap: 5px; }
+    .code-block-header .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .code-block-header .dot.r { background: #ff5f57; }
+    .code-block-header .dot.y { background: #febc2e; }
+    .code-block-header .dot.g { background: #28c840; }
+    .code-block pre { padding: 18px 20px; margin: 0; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: #c9d1d9; }
+
+    .hl-kw     { color: #ff7b72; }
+    .hl-fn     { color: #d2a8ff; }
+    .hl-str    { color: #a5d6ff; }
+    .hl-url    { color: #79c0ff; }
+    .hl-param  { color: #ffa657; }
+    .hl-danger { color: #f87171; }
+    .hl-ok     { color: #34d399; }
+    .hl-comment{ color: #6e7681; font-style: italic; }
+    .hl-gray   { color: #6e7681; }
+
+    .callout { display: flex; gap: 14px; padding: 16px 18px; border-radius: 8px; margin: 1.5rem 0; font-size: 14px; line-height: 1.7; }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.info   { background: rgba(108,108,255,.08); border-left: 3px solid #6c6cff; }
+    .callout.warn   { background: rgba(251,191,36,.07);  border-left: 3px solid #fbbf24; }
+    .callout.danger { background: rgba(248,113,113,.08); border-left: 3px solid #f87171; }
+    .callout.tip    { background: rgba(52,211,153,.07);  border-left: 3px solid #34d399; }
+
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
+    .compare-col { background: #0d0d14; padding: 18px 20px; }
+    .compare-col h4 { font-size: 12px; font-weight: 600; letter-spacing: .04em; margin-bottom: 10px; }
+    .compare-col.bad h4 { color: #f87171; }
+    .compare-col.good h4 { color: #34d399; }
+    .compare-col p { font-size: 13px; color: var(--text-2); margin-bottom: 0; line-height: 1.7; }
+    @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+
+    .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 2.5rem; }
+    .toc h4 { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+    .toc ol  { padding-left: 1.2rem; counter-reset: toc; list-style: none; }
+    .toc li  { counter-increment: toc; margin-bottom: 6px; }
+    .toc li::before { content: counter(toc) "."; color: var(--text-3); font-size: 11px; margin-right: 8px; font-family: var(--font-mono); }
+    .toc a   { font-size: 13px; color: var(--text-2); transition: color .15s; }
+    .toc a:hover { color: var(--text-1); text-decoration: none; }
+
+    .post-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; margin-top: 48px; border-top: 1px solid var(--border); }
+    .post-nav a { font-size: 13px; color: var(--text-3); transition: color .15s; }
+    .post-nav a:hover { color: var(--text-1); }
+
+    @media (max-width: 768px) { .post-wrap { padding: 0 1.25rem 64px; } }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-brand">g1its<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="../../fundamentos/index.html" class="active">Fundamentos</a></li>
+      <li><a href="../../writeups/index.html">Write-ups</a></li>
+      <li><a href="../../critica/index.html">Crítica</a></li>
+      <li><a href="../../whoami/whoami.html">whoami</a></li>
+    </ul>
+    <a href="https://github.com/eduardobezerraz" target="_blank" class="nav-cta">GitHub ↗</a>
+  </div>
+</nav>
+
+<main>
+<div class="post-wrap">
+
+  <header class="post-header">
+    <p class="breadcrumb">
+      <a href="../../fundamentos/index.html">Fundamentos</a> &nbsp;/&nbsp;
+      <a href="../../fundamentos/web-security/index.html">Web Security</a>
+      &nbsp;/&nbsp; Controle de Acesso
+    </p>
+    <div class="post-tags">
+      <span class="tag tag-fundamentos">Web Security</span>
+    </div>
+    <h1>Controle de Acesso</h1>
+    <div class="post-meta-line">
+      <span>g1its</span>
+      <span>·</span>
+      <span>Jun 2026</span>
+    </div>
+  </header>
+
+  <article class="post-body">
+
+    <nav class="toc">
+      <h4>Conteúdo</h4>
+      <ol>
+        <li><a href="#o-que-e">O que é controle de acesso?</a></li>
+        <li><a href="#tipos">Os três tipos de controle de acesso</a></li>
+        <li><a href="#vertical">Escalada vertical de privilégios</a></li>
+        <li><a href="#horizontal">Escalada horizontal e IDOR</a></li>
+        <li><a href="#outros-vetores">Outros pontos de quebra</a></li>
+        <li><a href="#prevencao">Como prevenir</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1 -->
+    <h2 id="o-que-e">⚫ O que é controle de acesso?</h2>
+
+    <p>
+      Controle de acesso é o que decide <strong>quem pode fazer o quê</strong> dentro
+      de uma aplicação. Ele trabalha junto com outros dois mecanismos, mas resolve
+      um problema diferente de cada um:
+    </p>
+
+    <ul>
+      <li><strong>Autenticação</strong> — confirma quem é o usuário (login e senha).</li>
+      <li><strong>Gerenciamento de sessão</strong> — garante que as próximas requisições
+      pertencem àquele mesmo usuário (cookie de sessão, token).</li>
+      <li><strong>Controle de acesso</strong> — decide se aquele usuário, já identificado,
+      tem permissão para fazer a ação que está tentando fazer.</li>
+    </ul>
+
+    <p>
+      Um usuário pode estar perfeitamente autenticado e ainda assim conseguir fazer
+      coisas que não devia, como: apagar a conta de outra pessoa, ver dados de terceiros,
+      acessar um painel de admin. Isso é controle de acesso quebrado (Broken Access Control), e é uma das
+      vulnerabilidades mais comuns e graves que existem.
+    </p>
+
+    <!-- 2 -->
+    <h2 id="tipos">⚫ Os três tipos de controle de acesso</h2>
+
+    <h4>Vertical</h4>
+    <p>
+      Restringe funcionalidades a tipos diferentes de usuário (Ex: Administrator vs Cliente). Em um e-commerce fictício
+      como o <code>g1its-vulnerable-site.com</code>, um administrador pode apagar
+      contas de qualquer cliente; um cliente comum não pode fazer isso de forma alguma.
+    </p>
+
+    <h4>Horizontal</h4>
+    <p>
+      Restringe o acesso a um subconjunto de recursos <strong>do mesmo tipo</strong>.
+      No mesmo site, por exemplo, cada cliente pode ver os próprios pedidos e dados de pagamento,
+      mas não os pedidos de outro cliente.
+    </p>
+
+    <h4>Dependente de contexto</h4>
+    <p>
+      Restringe ações com base no <strong>estado atual</strong> da aplicação.
+      Por exemplo, o carrinho de compras do <code>g1its-vulnerable-site.com</code>
+      não deveria poder ser alterado depois que o pagamento já foi processado,
+      mesmo que o próprio dono do carrinho esteja tentando mexer nele.
+    </p>
+
+    <!-- 3 -->
+    <h2 id="vertical">⚫ Escalada vertical de privilégios</h2>
+
+    <p>
+      Acontece quando um usuário comum ganha acesso a funcionalidades reservadas
+      a um nível mais alto. Como um cliente comum acessando o painel de admin.
+      Existem várias formas de explorar isso:
+    </p>
+
+    <h4>1. Funcionalidade sem proteção nenhuma</h4>
+
+    <p>
+      A forma mais simples de quebra: a aplicação simplesmente não verifica nada.
+      O painel de admin não aparece no menu do usuário comum, mas a URL
+      continua funcionando se você simplesmente acessá-la direto:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Sem verificação nenhuma no backend</span>
+      </div>
+      <pre><span class="hl-url">https://g1its-vulnerable-site.com/admin</span>
+<span class="hl-comment"># acesso ao endpoint de admin por meio de url conhecida</span></pre>
+    </div>
+
+    <p>
+      Às vezes a URL do endpoint de admin não é conhecida, mas também nem precisa ser adivinhada, ela pode aparecer sozinha
+      em lugares como o <code>robots.txt</code>, ou dentro do próprio código JavaScript
+      que monta a interface, mostrando algo como:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>JavaScript que entrega a URL escondida</span>
+      </div>
+      <pre><span class="hl-kw">const</span> isAdmin = <span class="hl-kw">false</span>;
+
+<span class="hl-kw">if</span> (isAdmin) {
+  renderLink(<span class="hl-str">"/painel-secreto-de-administrador"</span>);
+}
+  <span class="hl-comment"># Aqui se o código não realizasse essa verificação de</span>
+  <span class="hl-comment"># autorização, bastaria acessar o endpoint diretamente.</span>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">🔍</span>
+      <span>
+        Esconder uma URL é <strong>security by obscurity</strong> — segurança por obscuridade.
+        Não é um controle de acesso, é só torná-lo mais difícil de achar.
+      </span>
+    </div>
+
+    <h4>2. Controle de acesso baseado em parâmetro</h4>
+
+    <p>
+      Algumas aplicações decidem o papel do usuário no login e guardam esse dado
+      em algum lugar que o próprio usuário controla. Como um cookie, um campo hidden,
+      ou até um parâmetro na URL:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Requisição que carrega o "papel" do usuário</span>
+      </div>
+      <pre><span class="hl-url">https://g1its-vulnerable-site.com/home</span>?<span class="hl-param">role</span>=<span class="hl-str">user</span>
+
+<span class="hl-comment"># o atacante pode simplesmente troca o valor:</span>
+<span class="hl-url">https://g1its-vulnerable-site.com/home</span>?<span class="hl-param">role</span>=<span class="hl-danger">admin</span></pre>
+    </div>
+
+    <p>
+      No backend, isso costuma virar um código tão simples quanto:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — backend confiando no parâmetro</span>
+      </div>
+      <pre>role = request.args.<span class="hl-fn">get</span>(<span class="hl-str">"role"</span>)  <span class="hl-comment"># direto da URL, sem checar</span>
+
+<span class="hl-kw">if</span> role == <span class="hl-str">"admin"</span>:
+    <span class="hl-kw">return</span> render_admin_panel()<br>
+<span class="hl-comment"># nesse caso basta mudar a role de ?role=user para ?role=admin</span>
+<span class="hl-comment"># para ter acesso de administrador</span></pre>
+    </div>
+
+    <h4>3. Configuração errada na camada de plataforma</h4>
+
+    <p>
+      Algumas aplicações aplicam o controle de acesso no nível do servidor/proxy,
+      restringindo método HTTP e URL. Por exemplo, uma regra de firewall pode dizer:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Regra de acesso na camada de plataforma</span>
+      </div>
+      <pre>DENY: POST /admin/deleteUser  →  grupo "managers"</pre>
+    </div>
+
+    <p>
+      Duas formas comuns de furar isso:
+    </p>
+
+    <p><strong>Headers que sobrescrevem a URL.</strong> Alguns frameworks aceitam
+    headers não-padrão como <code>X-Original-URL</code> para reescrever a rota da requisição
+    internamente, enquanto o firewall, que só olha a URL visível, não percebe:</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Bypass via header de override de URL</span>
+      </div>
+      <pre>POST / HTTP/1.1
+Host: g1its-vulnerable-site.com
+<span class="hl-danger">X-Original-URL: /admin/deleteUser</span>
+<span class="hl-comment">
+# o firewall vê a requisição indo para "/" — libera
+# a aplicação interpreta o header e roteia para /admin/deleteUser</span></pre>
+    </div>
+
+    <p><strong>Troca do método HTTP.</strong> Se a regra bloqueia só <code>POST</code>,
+    tentar a mesma ação com <code>GET</code> pode simplesmente passar batido:</p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Bypass via troca de método HTTP</span>
+      </div>
+      <pre><span class="hl-danger">GET</span> /admin/deleteUser?id=42 HTTP/1.1</pre>
+    </div>
+
+    <h4>4. Discrepância na hora de comparar a URL</h4>
+
+    <p>
+      Front-end e back-end nem sempre concordam sobre o que é "a mesma URL".
+      Se um lado normaliza maiúsculas/minúsculas e o outro não, dá pra escapar
+      da regra trocando a capitalização:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Bypass via capitalização</span>
+      </div>
+      <pre><span class="hl-comment"># bloqueado pela regra de acesso:</span>
+/admin/deleteUser
+
+<span class="hl-comment"># mas isso aqui pode escapar da regra e ainda</span>
+<span class="hl-comment"># resolver para o mesmo endpoint internamente:</span>
+<span class="hl-danger">/ADMIN/DELETEUSER</span>
+<span class="hl-danger">/Admin/DeleteUser/</span></pre>
+    </div>
+
+    <!-- 4 -->
+    <h2 id="horizontal">⚫ Escalada horizontal e IDOR</h2>
+
+    <p>
+      Escalada horizontal acontece quando um usuário acessa recursos
+      <strong>de outro usuário do mesmo nível.</strong>
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Acessando o pedido de outro cliente</span>
+      </div>
+      <pre><span class="hl-comment"># sua própria conta:</span>
+<span class="hl-url">https://g1its-vulnerable-site.com/myaccount</span>?<span class="hl-param">id</span>=<span class="hl-str">123</span>
+
+<span class="hl-comment"># trocando o id, você acessa a conta de outro cliente:</span>
+<span class="hl-url">https://g1its-vulnerable-site.com/myaccount</span>?<span class="hl-param">id</span>=<span class="hl-danger">124</span></pre>
+    </div>
+
+    <p>
+      Isso é um exemplo de <strong>IDOR — Insecure Direct Object Reference</strong>.
+      O nome é grande, mas a ideia é simples: a aplicação usa um valor que o usuário
+      controla (o <code>id</code> da URL) para buscar um recurso diretamente no banco,
+      sem checar se aquele recurso pertence a quem está pedindo.
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — backend vulnerável a IDOR</span>
+      </div>
+      <pre>user_id = request.args.<span class="hl-fn">get</span>(<span class="hl-str">"id"</span>)
+account = db.<span class="hl-fn">query</span>(<span class="hl-str">"SELECT * FROM accounts WHERE id = ?"</span>, user_id)
+<span class="hl-kw">return</span> render(account)
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <span>
+        Trocar um número sequencial (<code>123</code> → <code>124</code>) é o caso mais
+        óbvio. Quando a aplicação usa identificadores aleatórios (GUIDs) para dificultar
+        isso, vale procurar onde esses GUIDs de outros usuários aparecem expostos
+        em outro lugar do site, como em comentários, mensagens ou avaliações públicas, etc.
+      </span>
+    </div>
+
+    <!-- 5 -->
+    <h2 id="outros-vetores">⚫ Outros pontos de quebra</h2>
+
+    <h4>Processos em múltiplas etapas</h4>
+
+    <p>
+      Funcionalidades feitas em várias etapas — preencher, revisar, confirmar —
+      às vezes protegem só os primeiros passos e esquecem o último. Se a aplicação
+      assume que só chega na etapa 3 quem já passou pelas etapas 1 e 2 (que são
+      protegidas), um atacante pode pular direto para a 3 e enviar os parâmetros
+      necessários manualmente:
+    </p>
+
+    <div class="compare-grid">
+      <div class="compare-col bad">
+        <h4>Fluxo esperado</h4>
+        <p>1. Carrega formulário de edição (protegido)<br>2. Envia alterações (protegido)<br>3. Confirma (sem checagem nenhuma)</p>
+      </div>
+      <div class="compare-col good">
+        <h4>Bypass do atacante</h4>
+        <p>Pula direto para a etapa 3, enviando os parâmetros da etapa 2 manualmente, sem ter passado pelas etapas protegidas.</p>
+      </div>
+    </div>
+
+    <h4>Controle baseado no header Referer</h4>
+
+    <p>
+      Algumas aplicações podem achar que uma sub-página de admin está protegida só porque
+      checam se o <code>Referer</code> (header enviado pelo navegador que indica a URL da página web anterior de onde o usuário veio), contém a URL do painel principal:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Header Referer forjado</span>
+      </div>
+      <pre>POST /admin/deleteUser HTTP/1.1
+Host: g1its-vulnerable-site.com
+<span class="hl-danger">Referer: https://g1its-vulnerable-site.com/admin</span>
+<span class="hl-comment">
+# aqui a aplicação considera que pelo usuário vir de uma página    
+# que só deve ser acessada pelo admin, então provavelmente o user    
+# deve ser o admin, porém o atacante pode controlar o valor
+# desse header. Basta colocar a URL "certa" e a checagem passa, 
+# mesmo sem ter visitado o painel de admin de verdade.</span></pre>
+    </div>
+
+    <h4>Controle baseado em localização</h4>
+
+    <p>
+      Restrições por país ou região (comuns em bancos e serviços de streaming)
+      costumam ser contornadas com VPN, proxy, ou simplesmente manipulando dados
+      de geolocalização no navegador, nenhum desses métodos é controle de acesso efetivo.
+    </p>
+
+    <!-- 6 -->
+    <h2 id="prevencao">⚫ Como prevenir</h2>
+
+    <p>
+      Não existe uma única correção mágica — controle de acesso precisa de
+      <strong>defesa em profundidade</strong>, aplicando vários princípios juntos:
+    </p>
+
+    <ul>
+      <li><strong>Nunca confie em obscuridade:</strong> Esconder uma URL não é proteção.</li>
+      <li><strong>Negue por padrão:</strong> Todo recurso deveria começar bloqueado,
+      e só ser liberado explicitamente quando fizer sentido.</li>
+      <li><strong>Centralize a verificação:</strong> Use um único mecanismo de controle
+      de acesso para a aplicação inteira, em vez de checagens espalhadas e inconsistentes.</li>
+      <li><strong>Declare permissões no código, não confie no front-end:</strong> A checagem
+      precisa acontecer no servidor, sempre, mesmo que o botão já esteja escondido na tela.</li>
+      <li><strong>Audite e teste de verdade:</strong> Tente ativamente acessar recursos
+      de outros papéis e de outros usuários antes de colocar em produção.</li>
+    </ul>
+
+    <p>
+      Um exemplo de checagem centralizada, em vez de espalhada por cada rota:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — checagem de acesso centralizada</span>
+      </div>
+      <pre><span class="hl-kw">def</span> <span class="hl-fn">require_owner</span>(resource, current_user):<br>
+    <span class="hl-comment"># Nega por padrão. Só libera se o dono bater com o usuário logado.</span>
+    <span class="hl-kw">if</span> resource.owner_id != current_user.id <span class="hl-kw">and not</span> current_user.is_admin:
+        <span class="hl-kw">raise</span> <span class="hl-fn">PermissionError</span>(<span class="hl-str">"acesso negado"</span>)
+    <span class="hl-kw">return</span> resource
+
+<span class="hl-comment"># toda rota que acessa um recurso passa por aqui antes de continuar:</span>
+<span class="hl-kw">def</span> <span class="hl-fn">view_account</span>(account_id, current_user):
+    account = db.<span class="hl-fn">get_account</span>(account_id)
+    account = <span class="hl-fn">require_owner</span>(account, current_user)  <span class="hl-comment"># checagem central</span>
+    <span class="hl-kw">return</span> render(account)</pre>
+    </div>
+
+    <div class="callout tip">
+      <span class="callout-icon">⚠️</span>
+      <span>
+        A diferença chave: a checagem compara o dono real do recurso (vindo do banco)
+        com o usuário da <strong>sessão atual</strong>, nunca com um valor que veio
+        da própria requisição, como um <code>id</code> ou <code>role</code> na URL.
+      </span>
+    </div>
+
+  </article>
+
+  <nav class="post-nav">
+    <a href="../../fundamentos/web-security/index.html">← Web Security</a>
+    <a href="../../fundamentos/index.html">Fundamentos →</a>
+  </nav>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <span class="foot-brand">g1its.</span>
+      <div class="foot-links">
+        <a href="../../fundamentos/index.html">Fundamentos</a>
+        <a href="../../writeups/index.html">Write-ups</a>
+        <a href="../../critica/index.html">Crítica</a>
+        <a href="../../whoami/whoami.html">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+      </div>
+      <span class="foot-copy">Copyleft © 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

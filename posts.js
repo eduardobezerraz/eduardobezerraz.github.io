@@ -15,6 +15,15 @@
 ================================================= */
 
 const POSTS = [
+  {
+    date:    "2026-06-19",
+    title:   "Controle de Acesso",
+    desc:    "Como controles verticais, horizontais e IDOR quebram na prática.",
+    url:     "fundamentos/web-security/controle-de-acesso.html",
+    section: "fundamentos",
+    tag:     "Web Security",
+    img:     "assets/img/controle-de-acesso.png"   // opcional — 1280x720px recomendado
+  },
 
   {
     date:    "2026-06-18",
