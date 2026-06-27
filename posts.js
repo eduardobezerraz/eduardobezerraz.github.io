@@ -27,7 +27,7 @@ const POSTS = [
 
   {
     date:    "2026-06-18",
-    title:   "Path Traversal — teoria e exploração",
+    title:   "Path Traversal — Teoria e Exploração",
     desc:    "Como vulnerabilidades de travessia de caminhos permitem ler arquivos arbitrários no servidor.",
     url:     "fundamentos/web-security/path-traversal.html",
     section: "fundamentos",
