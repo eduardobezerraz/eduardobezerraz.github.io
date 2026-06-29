@@ -15,6 +15,15 @@
 ================================================= */
 
 const POSTS = [
+  {  
+    date:    "2026-06-22",
+    title:   "Autenticação",
+    desc:    "Como enumeração de usuários, brute-force, falhas de MFA e reset de senha quebram na prática.",
+    url:     "fundamentos/web-security/autenticacao.html",
+    section: "fundamentos",
+    tag:     "Web Security",
+    img:     "assets/img/autenticacao.png"
+  },
   {
     date:    "2026-06-19",
     title:   "Controle de Acesso",
@@ -22,7 +31,7 @@ const POSTS = [
     url:     "fundamentos/web-security/controle-de-acesso.html",
     section: "fundamentos",
     tag:     "Web Security",
-    img:     "assets/img/controle-de-acesso.png"   // opcional — 1280x720px recomendado
+    img:     "assets/img/controle-de-acesso.png"   // 1280x720px recomendado
   },
 
   {
@@ -32,7 +41,7 @@ const POSTS = [
     url:     "fundamentos/web-security/path-traversal.html",
     section: "fundamentos",
     tag:     "Web Security",
-    img:     "assets/img/path-traversal.png"   // opcional — 1280x720px recomendado
+    img:     "assets/img/path-traversal.png"   // 1280x720px recomendado
   },
 
 ];

@@ -103,7 +103,7 @@ a{color:inherit;text-decoration:none}
 .th-writeups   {background:#0d1208;color:rgba(52,211,153,.3)}
 .th-critica    {background:#18080c;color:rgba(248,113,113,.3)}
 
-.post-body{padding:20px 22px 22px;flex:1;display:flex;flex-direction:column}
+.post-body{padding:20px 22px 10px;flex:1;display:flex;flex-direction:column}
 .post-meta{display:flex;align-items:center;gap:10px;margin-bottom:12px}
 .tag{font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:4px}
 .tag-fundamentos{background:rgba(108,108,255,.15);color:#8a8aff}

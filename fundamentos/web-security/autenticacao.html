@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Autenticação — Web Security — G1its</title>
+  <meta name="description" content="Como falhas de autenticação, MFA e funcionalidades de conta quebram na prática — e como prevenir.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../css/style.css">
+  <style>
+    .post-wrap { max-width: 720px; margin: 0 auto; padding: 0 2.5rem 80px; }
+
+    .post-header { padding: 48px 0 40px; border-bottom: 1px solid var(--border); margin-bottom: 48px; }
+    .post-header .breadcrumb { font-size: 12px; color: var(--text-3); margin-bottom: 20px; }
+    .post-header .breadcrumb a { color: var(--text-3); transition: color .15s; }
+    .post-header .breadcrumb a:hover { color: var(--text-1); }
+    .post-header .post-tags { display: flex; gap: 8px; margin-bottom: 20px; }
+    .post-header h1 { font-size: clamp(1.8rem, 4vw, 2.6rem); font-weight: 700; letter-spacing: -0.04em; line-height: 1.1; color: var(--text-1); margin-bottom: 16px; }
+    .post-header .post-meta-line { font-size: 12px; color: var(--text-3); display: flex; align-items: center; gap: 16px; }
+
+    .post-body { font-size: 15px; color: var(--text-2); line-height: 1.8; }
+    .post-body h2 { font-size: 1.15rem; font-weight: 700; letter-spacing: -0.03em; color: var(--text-1); margin: 2.5rem 0 1rem; }
+    .post-body h3 { font-size: 0.95rem; font-weight: 600; color: var(--text-1); margin: 2rem 0 0.75rem; letter-spacing: -0.01em; }
+    .post-body p { margin-bottom: 1.1rem; }
+    .post-body strong { color: var(--text-1); font-weight: 600; }
+    .post-body a { color: var(--text-1); text-decoration: underline; text-underline-offset: 3px; opacity: .7; transition: opacity .15s; }
+    .post-body a:hover { opacity: 1; }
+    .post-body ul, .post-body ol { padding-left: 1.4rem; margin-bottom: 1.2rem; }
+    .post-body li { margin-bottom: 0.4rem; }
+
+    .post-body code { font-family: var(--font-mono); font-size: 12.5px; background: #15151c; color: #a8b4ff; padding: 2px 7px; border-radius: 4px; border: 1px solid var(--border); }
+
+    .code-block { background: #0d0d14; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
+    .code-block-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; background: #12121a; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 11px; color: var(--text-3); }
+    .code-block-header .dots { display: flex; gap: 5px; }
+    .code-block-header .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .code-block-header .dot.r { background: #ff5f57; }
+    .code-block-header .dot.y { background: #febc2e; }
+    .code-block-header .dot.g { background: #28c840; }
+    .code-block pre { padding: 18px 20px; margin: 0; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.7; color: #c9d1d9; }
+
+    .hl-kw     { color: #ff7b72; }
+    .hl-fn     { color: #d2a8ff; }
+    .hl-str    { color: #a5d6ff; }
+    .hl-url    { color: #79c0ff; }
+    .hl-param  { color: #ffa657; }
+    .hl-danger { color: #f87171; }
+    .hl-ok     { color: #34d399; }
+    .hl-comment{ color: #6e7681; font-style: italic; }
+    .hl-gray   { color: #6e7681; }
+
+    .callout { display: flex; gap: 14px; padding: 16px 18px; border-radius: 8px; margin: 1.5rem 0; font-size: 14px; line-height: 1.7; }
+    .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+    .callout.info   { background: rgba(108,108,255,.08); border-left: 3px solid #6c6cff; }
+    .callout.warn   { background: rgba(251,191,36,.07);  border-left: 3px solid #fbbf24; }
+    .callout.danger { background: rgba(248,113,113,.08); border-left: 3px solid #f87171; }
+    .callout.tip    { background: rgba(52,211,153,.07);  border-left: 3px solid #34d399; }
+
+    .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin: 1.5rem 0; }
+    .compare-col { background: #0d0d14; padding: 18px 20px; }
+    .compare-col h4 { font-size: 12px; font-weight: 600; letter-spacing: .04em; margin-bottom: 10px; }
+    .compare-col.bad h4 { color: #f87171; }
+    .compare-col.good h4 { color: #34d399; }
+    .compare-col p { font-size: 13px; color: var(--text-2); margin-bottom: 0; line-height: 1.7; }
+    @media (max-width: 640px) { .compare-grid { grid-template-columns: 1fr; } }
+
+    .toc { background: var(--card-bg); border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 2.5rem; }
+    .toc h4 { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--text-3); margin-bottom: 12px; }
+    .toc ol  { padding-left: 1.2rem; counter-reset: toc; list-style: none; }
+    .toc li  { counter-increment: toc; margin-bottom: 6px; }
+    .toc li::before { content: counter(toc) "."; color: var(--text-3); font-size: 11px; margin-right: 8px; font-family: var(--font-mono); }
+    .toc a   { font-size: 13px; color: var(--text-2); transition: color .15s; }
+    .toc a:hover { color: var(--text-1); text-decoration: none; }
+
+    .post-nav { display: flex; justify-content: space-between; align-items: center; padding-top: 40px; margin-top: 48px; border-top: 1px solid var(--border); }
+    .post-nav a { font-size: 13px; color: var(--text-3); transition: color .15s; }
+    .post-nav a:hover { color: var(--text-1); }
+
+    @media (max-width: 768px) { .post-wrap { padding: 0 1.25rem 64px; } }
+  </style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="../../index.html" class="nav-brand">g1its<span>.</span></a>
+    <ul class="nav-links">
+      <li><a href="../../fundamentos/index.html" class="active">Fundamentos</a></li>
+      <li><a href="../../writeups/index.html">Write-ups</a></li>
+      <li><a href="../../critica/index.html">Crítica</a></li>
+      <li><a href="../../whoami/whoami.html">whoami</a></li>
+    </ul>
+    <a href="https://github.com/eduardobezerraz" target="_blank" class="nav-cta">GitHub ↗</a>
+  </div>
+</nav>
+
+<main>
+<div class="post-wrap">
+
+  <header class="post-header">
+    <p class="breadcrumb">
+      <a href="../../fundamentos/index.html">Fundamentos</a> &nbsp;/&nbsp;
+      <a href="../../fundamentos/web-security/index.html">Web Security</a>
+      &nbsp;/&nbsp; Autenticação
+    </p>
+    <div class="post-tags">
+      <span class="tag tag-fundamentos">Web Security</span>
+    </div>
+    <h1>Autenticação</h1>
+    <div class="post-meta-line">
+      <span>g1its</span>
+      <span>·</span>
+      <span>Jun 2026</span>
+    </div>
+  </header>
+
+  <article class="post-body">
+
+    <nav class="toc">
+      <h4>Conteúdo</h4>
+      <ol>
+        <li><a href="#o-que-e">O que é autenticação?</a></li>
+        <li><a href="#senha">Falhas no login por senha</a></li>
+        <li><a href="#enumeracao">Enumeração de usuários</a></li>
+        <li><a href="#brute-force">Proteções fracas contra brute-force</a></li>
+        <li><a href="#mfa">Falhas em autenticação multifator</a></li>
+        <li><a href="#outros">Outros mecanismos: "lembrar de mim" e reset de senha</a></li>
+        <li><a href="#prevencao">Como prevenir</a></li>
+      </ol>
+    </nav>
+
+    <!-- 1 -->
+    <h2 id="o-que-e">O que é autenticação?</h2>
+
+    <p>
+      Autenticação é o processo de <strong>verificar quem é alguém</strong>.
+      É fácil confundir com autorização, mas são coisas diferentes:
+    </p>
+
+    <ul>
+      <li><strong>Autenticação</strong> confirma que você é quem diz ser.</li>
+      <li><strong>Autorização</strong> decide o que você tem permissão de fazer.</li>
+    </ul>
+
+    <p>
+      Existem três tipos de fator de autenticação:
+    </p>
+
+    <ul>
+      <li><strong>Algo que você sabe</strong> :senha, resposta de pergunta de segurança.</li>
+      <li><strong>Algo que você tem</strong> :celular, token físico, app gerador de código.</li>
+      <li><strong>Algo que você é</strong> :biometria.</li>
+    </ul>
+
+    <p>
+      É comum que aplicações utilizem apenas o primeiro fator (senha). Falhas de autenticação
+      são especialmente graves porque, se um atacante conseguir burlar esse processo,
+      ele ganha acesso a tudo que aquela conta pode fazer e se a conta comprometida
+      for de um administrador, o estrago pode ser maior.
+    </p>
+
+    <!-- 2 -->
+    <h2 id="senha">Falhas no login por senha</h2>
+
+    <p>
+      No login por senha, o sistema assume que só quem conhece a senha pode ser
+      o dono da conta. Mas isso pode ser contornado de duas formas: <strong>brute-force</strong>
+      (adivinhar credenciais por tentativa e erro) e <strong>falhas de lógica</strong>
+      que permitem pular a autenticação inteira.
+    </p>
+
+    <h3>Brute-force de usuário e senha</h3>
+
+    <p>
+      Brute-force não precisa ser aleatório. Conhecendo padrões comuns, um atacante
+      reduz drasticamente o espaço de busca:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Padrões previsíveis de usuário e senha</span>
+      </div>
+      <pre><span class="hl-comment"># usernames corporativos podem seguir um padrão óbvio:</span>
+joao.silva@company-vulnerable-site.com
+maria.santos@company-vulnerable-site.com
+
+<span class="hl-comment"># usuários tentam encaixar a própria senha numa política</span>
+<span class="hl-comment"># em vez de criar uma senha de verdade aleatória:</span>
+company123      →  Company123!     <span class="hl-comment"># satisfaz "1 maiúscula + 1 símbolo"</span>
+company123      →  Company1234!    <span class="hl-comment"># renovação periódica de senha</span></pre>
+
+
+
+    </div>
+
+    <p>
+      Isso significa que com uma wordlist bem pensada, baseada em comportamento humano,
+      é muito pode ser muito mais eficiente que tentar todas as combinações possíveis de caracteres.
+    </p>
+
+    <!-- 3 -->
+    <h2 id="enumeracao">Enumeração de usuários</h2>
+
+    <p>
+      Enumeração de usuários é quando você consegue determinar se um usuário existe ou não,
+      quando o site, sem querer, revela se um determinado
+      nome de usuário existe na base. Isso reduz
+      drasticamente o trabalho de um atacante, porque ele só precisa focar em
+      adivinhar a senha de contas que ele já sabe que existem.
+    </p>
+
+    <p>Os três sinais mais comuns de enumeração:</p>
+
+    <h3>1. Código de status diferente</h3>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — comportamento vulnerável no backend</span>
+      </div>
+      <pre><span class="hl-kw">def</span> <span class="hl-fn">login</span>(username, password):
+    user = db.<span class="hl-fn">find_user</span>(username)
+
+    <span class="hl-kw">if</span> user <span class="hl-kw">is</span> <span class="hl-kw">None</span>:
+        <span class="hl-kw">return</span> Response(status=<span class="hl-danger">404</span>)  <span class="hl-comment">#  usuário não existe</span>
+
+    <span class="hl-kw">if</span> user.password != <span class="hl-fn">hash</span>(password):
+        <span class="hl-kw">return</span> Response(status=<span class="hl-danger">401</span>)  <span class="hl-comment">#  usuário existe, senha errada</span>
+
+    <span class="hl-kw">return</span> Response(status=<span class="hl-ok">200</span>)</pre>
+    </div>
+
+    <p>
+      Dois códigos diferentes (<code>404</code> vs <code>401</code>) já dizem ao
+      atacante exatamente quais usernames existem, sem nem precisar acertar a senha.
+    </p>
+
+    <h3>2. Mensagem de erro diferente</h3>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Mensagens que revelam a existência do usuário</span>
+      </div>
+      <pre><span class="hl-comment"># usuário não existe:</span>
+<span class="hl-danger">"Usuário não encontrado."</span>
+
+<span class="hl-comment"># usuário existe, senha errada:</span>
+<span class="hl-danger">"Senha incorreta."</span>
+
+<span class="hl-comment"># o correto é uma mensagem genérica idêntica nos dois casos:</span>
+<span class="hl-ok">"Usuário ou senha incorretos."</span></pre>
+    </div>
+
+    <div class="callout warn">
+      <span class="callout-icon">🔍</span>
+      <span>
+        Até um espaço em branco ou ponto final fora de lugar transforma duas
+        mensagens "idênticas" em mensagens distinguíveis no HTML — mesmo que
+        a diferença não apareça visualmente na tela.
+      </span>
+    </div>
+
+    <h3>3. Tempo de resposta diferente</h3>
+
+    <p>
+      Se o sistema só verifica a senha <strong>depois</strong> de confirmar que
+      o usuário existe, essa etapa extra introduz um delay perceptível:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — verificação que vaza tempo de resposta</span>
+      </div>
+      <pre><span class="hl-kw">def</span> <span class="hl-fn">login</span>(username, password):
+    user = db.<span class="hl-fn">find_user</span>(username)
+    <span class="hl-kw">if</span> user <span class="hl-kw">is</span> <span class="hl-kw">None</span>:
+        <span class="hl-kw">return</span> fail()  <span class="hl-comment"># 10 ms se o user não existe</span>
+
+    <span class="hl-comment"># bcrypt.checkpw checa o hash da senha e é lento</span>
+    <span class="hl-kw">if</span> bcrypt.<span class="hl-fn">checkpw</span>(password, user.password_hash):
+        <span class="hl-kw">return</span> success()
+    <span class="hl-kw">return</span> fail()  <span class="hl-comment"># 120 ms se o user existir </span></pre>
+    </div>
+
+    <p>
+      Um atacante pode tornar essa diferença ainda mais óbvia mandando uma
+      senha gigante de propósito, já que o tempo extra de processamento
+      fica mais perceptível.
+    </p>
+
+    <!-- 4 -->
+    <h2 id="brute-force">Proteções fracas contra brute-force</h2>
+
+    <p>
+      As duas defesas mais comuns são <strong>bloqueio de conta</strong> (depois
+      de N tentativas falhas) e <strong>rate limiting por IP</strong>. Nenhuma delas, isoladamente,
+       é suficiente para impedir brute-force.
+    </p>
+
+    <h3>Bloqueio de conta — burlado com poucas senhas e muitos usuários</h3>
+
+    <p>
+      Se o limite é, por exemplo, 3 tentativas antes de bloquear a conta, um
+      atacante pode inverter a lógica do ataque: em vez de tentar muitas
+      senhas contra um usuário, ele tenta poucas senhas contra muitos usuários,
+      sem ultrapassar o limite configurado para cada conta:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Estratégia que nunca aciona o bloqueio</span>
+      </div>
+      <pre>usuarios = [<span class="hl-str">"joao"</span>, <span class="hl-str">"maria"</span>, <span class="hl-str">"carlos"</span>, ... ]  <span class="hl-comment"># centenas de contas</span>
+senhas   = [<span class="hl-str">"123456"</span>, <span class="hl-str">"senha123"</span>, <span class="hl-str">"g1its2024"</span>] <span class="hl-comment"># só 3 (dentro do limite)</span>
+
+<span class="hl-kw">for</span> senha <span class="hl-kw">in</span> senhas:
+    <span class="hl-kw">for</span> usuario <span class="hl-kw">in</span> usuarios:
+        <span class="hl-fn">tentar_login</span>(usuario, senha)
+        <span class="hl-comment"># cada conta recebe no máximo 3 tentativas e nunca bloqueia</span>
+        <span class="hl-comment"># só precisa UM usuário usar UMA dessas senhas pra funcionar</span></pre>
+    </div>
+
+    <h3>Rate limiting por IP — burlado trocando o IP</h3>
+
+    <p>
+      Se a defesa é só "bloquear o IP depois de X tentativas", o atacante pode distribuir
+      as requisições entre vários IPs (usando proxies, VPN, ou até manipulando headers
+      como <code>X-Forwarded-For</code>, se o servidor confiar cegamente neles).
+    </p>
+
+    <div class="callout warn">
+      <span class="callout-icon">🔍</span>
+      <span>
+        Uma falha comum: zerar o contador de tentativas falhas quando o dono do IP
+        faz login com sucesso. Isso permite que o atacante "resete" o contador
+        de propósito, intercalando o próprio login válido a cada poucas tentativas
+        de brute-force contra outras contas.
+      </span>
+    </div>
+
+    <!-- 5 -->
+    <h2 id="mfa">Falhas em autenticação multifator</h2>
+
+    <p>
+      Autenticação de dois fatores (2FA) combina algo que você sabe (senha) com
+      algo que você tem (código de um app ou SMS). É mais segura que a senha sozinha
+      <strong>se for implementada corretamente.</strong> 
+    </p>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <span>
+        2FA por e-mail pode ser uma verificação não tão efetiva, pois acessar o código de verificação no
+        e-mail pode só exigir a mesma senha que o atacante já teve acesso (caso o atacante já tenha 
+        comprometido as mesmas credenciais utilizadas para acessar o e-mail),
+         se a senha do usuário for a mesma. É como verificar o mesmo fator duas vezes.
+      </span>
+    </div>
+
+    <h3>1. Pular a segunda etapa por completo</h3>
+
+    <p>
+      As vezes após a senha verificada na etapa 1 e durante a verificação do código na etapa 2, o usuário já está
+      "meio logado", e a aplicação não verifica se a etapa 2 foi realmente concluída com sucesso. Se a implementações
+      for mal feita, pode ser possível acessar diretamente uma página que devia aparecer após login completo (pulando etapas):
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Pulando direto para a página protegida</span>
+      </div>
+      <pre><span class="hl-comment"># etapa 1: login normal com senha feito com sucesso</span>
+POST /login-step-1
+username=carlos&password=correto123
+<br>
+<span class="hl-comment">#  servidor já cria uma sessão "parcial" pro usuário</span>
+<span class="hl-comment">#  e pede para que o usuário faça a segunda etapa</span>
+
+<span class="hl-comment">#  o atacante pode ignorar a etapa 2 (código) e tentar direto:</span>
+<span class="hl-danger">GET /minha-conta</span>
+<span class="hl-comment">#  algumas implementações deixam de verificar se a etapa 2 foi concluída</span>
+<span class="hl-comment">#  elas apenas verificam se existe uma sessão</span></pre>
+
+
+    </div>
+
+    <h3>2. Cookie de sessão trocável entre a etapa 1 e a etapa 2</h3>
+
+    <p>
+      Esse é o bypass mais perigoso. Depois da senha, o servidor associa a sessão
+      a um cookie indicando de quem é a conta, e a segunda etapa pode confiar demais
+      nesse cookie:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Fluxo legítimo de login em 2 etapas</span>
+      </div>
+      <pre><span class="hl-comment"># 1. login com a própria senha:</span>
+POST /login-step-1
+username=atacante&password=minha-senha
+
+<span class="hl-comment"># 2. servidor responde com um cookie identificando a conta:</span>
+Set-Cookie: <span class="hl-param">account</span>=<span class="hl-str">atacante</span>
+
+<span class="hl-comment"># 3. etapa final usa esse cookie pra saber de quem é o código:</span>
+POST /login-step-2
+Cookie: <span class="hl-param">account</span>=<span class="hl-str">atacante</span>
+verification-code=123456</pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>O bypass: trocar o cookie antes da etapa final</span>
+      </div>
+      <pre><span class="hl-comment"># o atacante loga normalmente com a própria conta (etapa 1)...</span>
+POST /login-step-1
+username=atacante&password=minha-senha
+<span class="hl-comment"># ...mas troca o valor do cookie manualmente antes da etapa 2:</span>
+
+POST /login-step-2
+Cookie: <span class="hl-danger">account=vitima-user</span>
+verification-code=<span class="hl-danger">000000</span>
+<span class="hl-comment">
+# se o código também puder ser brute-forçado (4-6 dígitos),
+# o atacante entra na conta da vítima sem precisar saber a senha dela</span></pre>
+    </div>
+
+    <h3>3. Código de verificação fraco contra brute-force</h3>
+
+    <p>
+      Um código de 6 dígitos tem só 1 milhão de combinações e torna-se viável um brute-force
+      caso não existam limites de tentativas. Deslogar o usuário depois de N tentativas, 
+      por si só, pode não ser suficiente, porque um ataque automatizado reinicia 
+      o processo de login do zero a cada bloqueio.
+    </p>
+
+    <!-- 6 -->
+    <h2 id="outros">Outros mecanismos: "lembrar de mim" e reset de senha</h2>
+
+    <h3>Cookie de "lembrar de mim" previsível</h3>
+
+    <p>
+      Se o cookie é construído a partir de valores estáticos e previsíveis
+      (nome de usuário + timestamp, por exemplo), um atacante que entende a fórmula
+      pode tentar forjar o cookie de outros usuários:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — cookie "remember me" mal construído</span>
+      </div>
+      <pre><span class="hl-kw">import</span> base64
+
+<span class="hl-kw">def</span> <span class="hl-fn">generate_remember_token</span>(username):
+    raw = <span class="hl-fn">f</span><span class="hl-str">"{username}:{timestamp_do_login}"</span>
+    <span class="hl-kw">return</span> base64.<span class="hl-fn">b64encode</span>(raw.<span class="hl-fn">encode</span>())
+    <span class="hl-comment"># base64 não é criptografia! É só uma codificação reversível</span>
+    <span class="hl-comment"># qualquer pessoa pode decodificar e descobrir a fórmula</span></pre>
+    </div>
+
+    <div class="callout info">
+      <span class="callout-icon">💡</span>
+      <span>
+        Base64 não fornece confidencialidade, é só uma forma de representar bytes como texto,
+        igual ao URL encoding. Mesmo um hash sem salt pode ser quebrado: hashes
+        de senhas comuns já vazadas estão disponíveis publicamente, em alguns casos, 
+        basta consultar bases públicas de hashes conhecidos.
+      </span>
+    </div>
+
+    <h3>Reset de senha por parâmetro adivinhável</h3>
+
+    <p>
+      Uma implementação insegura consiste em:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Reset de senha vulnerável</span>
+      </div>
+      <pre><span class="hl-url">https://g1its-vulnerable-site.com/reset-password</span>?<span class="hl-param">user</span>=<span class="hl-danger">vitima-user</span>
+
+<span class="hl-comment"># trocar o valor da url para o endpoint da tela de "definir nova senha",</span>
+<span class="hl-comment"># pode levar ao acesso sem precisar nunca ter recebido um e-mail real</span></pre>
+    </div>
+
+    <p>
+      O jeito correto é gerar um <strong>token de alta entropia</strong>, sem
+      pistas sobre qual conta ele pertence:
+    </p>
+
+    <div class="code-block">
+      <div class="code-block-header">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span>Python — token seguro de reset</span>
+      </div>
+      <pre><span class="hl-kw">import</span> secrets
+
+<span class="hl-kw">def</span> <span class="hl-fn">generate_reset_token</span>():
+    <span class="hl-kw">return</span> secrets.<span class="hl-fn">token_hex</span>(<span class="hl-num">32</span>)
+    <span class="hl-comment"># token longo, aleatório, sem relação visível com o usuário</span>
+    <span class="hl-comment"># precisa expirar rápido e ser invalidado após o uso</span></pre>
+    </div>
+
+
+    <!-- 7 -->
+    <h2 id="prevencao">Como prevenir</h2>
+
+    <p>
+      Não existe uma correção única. A autenticação precisa de
+      <strong>várias camadas trabalhando juntas</strong>:
+    </p>
+
+    <ul>
+      <li><strong>Nunca envie credenciais em texto puro.</strong> HTTPS sempre,
+      incluindo redirecionamento automático de HTTP.</li>
+      <li><strong>Mensagens e tempos de resposta idênticos.</strong> Login errado
+      deve parecer igual do ponto de vista do cliente, não importa o motivo do erro.</li>
+      <li><strong>Rate limiting bem implementado.</strong> Por IP, conta e outros identificadores,
+         aplicando atrasos progressivos ou CAPTCHA quando apropriado.</li>
+      <li><strong>Tokens de alta entropia</strong> para reset de senha e
+      "lembrar de mim", nunca valores previsíveis ou só codificados em Base64.</li>
+      <li><strong>2FA com fator realmente diferente</strong> Utilize um segundo fator independente, como aplicativos autenticadores ou chaves de segurança.
+         Evite depender apenas do e-mail quando ele é protegido pelas mesmas credenciais da conta.</li>
+      <li><strong>Revalide a sessão a cada etapa</strong>Valide o estado da autenticação em todas as etapas, 
+        verificando no servidor se o usuário realmente concluiu o fluxo (senha, 2FA etc.),
+         em vez de confiar apenas na existência de um cookie ou sessão.</li>
+    </ul>
+
+    <p>
+      Exemplo de login com mensagens e tempo de resposta uniforme:
+    </p>
+
+<div class="code-block">
+  <div class="code-block-header">
+    <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+    <span>Python — login com mensagens e tempo uniformes</span>
+  </div>
+  <pre><span class="hl-kw">import</span> bcrypt
+
+<span class="hl-comment"># Hash bcrypt válido usado para manter o tempo uniforme</span>
+DUMMY_HASH = <span class="hl-str">b"$2b$12$A0DL0s4vW3j2j7GmPzQJ1e7Wk8Y8J3kHjGkJr9z5M5m3xR7k8uL6."</span>
+
+<span class="hl-kw">def</span> <span class="hl-fn">login</span>(username, password):
+    <span class="hl-comment"># procura o usuário</span>
+    user = db.<span class="hl-fn">find_user</span>(username)
+
+    <span class="hl-comment"># # verifica um hash independentemente de o usuário existir</span>
+    hash_to_check = user.password_hash <span class="hl-kw">if</span> user <span class="hl-kw">else</span> DUMMY_HASH
+
+    <span class="hl-comment"># executa o bcrypt nos dois casos</span>
+    senha_ok = bcrypt.<span class="hl-fn">checkpw</span>(
+        password.<span class="hl-fn">encode</span>(),
+        hash_to_check
+    )
+
+    <span class="hl-comment"># mesma mensagem e mesmo status para ambos os erros</span>
+    <span class="hl-kw">if</span> user <span class="hl-kw">is</span> <span class="hl-kw">None</span> <span class="hl-kw">or not</span> senha_ok:
+        <span class="hl-kw">return</span> Response(
+            <span class="hl-str">"Usuário ou senha incorretos."</span>,
+            status=<span class="hl-num">401</span>
+        )
+
+    <span class="hl-comment"># login concluído</span>
+    <span class="hl-kw">return</span> Response(
+        <span class="hl-str">"Login bem-sucedido."</span>,
+        status=<span class="hl-num">200</span>
+    )</pre>
+</div>
+
+    <div class="callout tip">
+      <span class="callout-icon">✅</span>
+      <span>
+        Rodar o hash mesmo quando o usuário não existe reduz diferenças de tempo de resposta entre os casos,
+         dificultando ataques de enumeração baseados em temporização.
+         O servidor sempre faz a mesma quantidade de trabalho,
+        então não há diferença mensurável entre "usuário não existe" e "senha errada".
+      </span>
+    </div>
+
+  </article>
+
+  <nav class="post-nav">
+    <a href="../../fundamentos/web-security/index.html">← Web Security</a>
+    <a href="../../fundamentos/index.html">Fundamentos →</a>
+  </nav>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-inner">
+      <span class="foot-brand">g1its.</span>
+      <div class="foot-links">
+        <a href="../../fundamentos/index.html">Fundamentos</a>
+        <a href="../../writeups/index.html">Write-ups</a>
+        <a href="../../critica/index.html">Crítica</a>
+        <a href="../../whoami/whoami.html">whoami</a>
+        <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
+      </div>
+      <span class="foot-copy">Copyleft © 2026</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
