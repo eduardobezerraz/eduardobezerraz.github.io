@@ -88,7 +88,6 @@
         <a href="../../whoami/whoami.html">whoami</a>
         <a href="https://github.com/eduardobezerraz" target="_blank">GitHub</a>
       </div>
-      <span class="foot-copy">Copyleft © 2026</span>
     </div>
   </div>
 </footer>
@@ -103,7 +102,11 @@
   const THUMB_CLASS = { fundamentos:'th-fundamentos',  writeups:'th-writeups',  critica:'th-critica'  };
 
   function fmtDate(iso) {
-    return new Date(iso + 'T12:00:00').toLocaleDateString('pt-BR', { day:'2-digit', month:'short', year:'numeric' });
+    const d = new Date(iso + 'T12:00:00');
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yy = String(d.getFullYear()).slice(-2);
+    return `${dd}/${mm}/${yy}`;
   }
   function resolveUrl(url) {
     return url.startsWith(TOPIC_KEYWORD + '/') ? url.replace(TOPIC_KEYWORD + '/', '') : '../../' + url;
@@ -142,8 +145,11 @@
       row.className = 'post-list-row';
       row.innerHTML = `
         <span class="post-list-thumb">${thumbHTML}</span>
-        <span class="post-list-title">${p.title}</span>
-        <span class="post-list-meta-row">
+        <span class="post-list-main">
+          <span class="post-list-title">${p.title}</span>
+          <span class="post-list-desc">${p.desc || ''}</span>
+        </span>
+        <span class="post-list-meta">
           <span class="tag ${tg} post-list-tag">${p.tag || 'Redes'}</span>
           <span class="post-list-date">${fmtDate(p.date)}</span>
         </span>
